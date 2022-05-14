@@ -2,28 +2,25 @@ import { TruthTable, Sentence } from "first-order-logic";
 
 export class Tables{
     private static _tables: Map<string, TruthTable> = new Map<string, TruthTable>([
-        ["Ivan", new TruthTable()
-            .with(Sentence.build("Heroina", "Ron"))
-            .with(Sentence.build("Cocacola", "Ron"))
-            .with(Sentence.build("Mentos", "Agatha"))
-            .with(Sentence.build("Anfetaminas", "Ivan"))
-            .with(Sentence.build("Cocacola", "Ivan"))],
-        ["Agatha", new TruthTable()
-            .with(Sentence.build("Cocaina", "Agatha"))
-            .with(Sentence.build("Cocacola", "Agatha"))
-            .with(Sentence.build("Cocacola", "Mamen"))
-            .with(Sentence.build("Anfetaminas", "Mamen"))],
-        ["Mamen", new TruthTable()
-            .with(Sentence.build("Cocaina", "Agatha"))
-            .with(Sentence.build("Cocacola", "Agatha"))
-            .with(Sentence.build("Cocacola", "Mamen"))
-            .with(Sentence.build("Anfetaminas", "Mamen"))
-            .with(Sentence.build("Nymphomaniac", "Mamen"))],
-        ["Ron", new TruthTable()
-            .with(Sentence.build("Heroina", "Ron"))
-            .with(Sentence.build("Cocacola", "Ron"))
-            .with(Sentence.build("Mentos", "Agatha"))
-            .with(Sentence.build("Anfetaminas", "Ivan"))],
+        ["Anselmo Rubiales", new TruthTable()
+            .with(Sentence.build("Republicano", "AnselmoRubiales"))
+            .with(Sentence.build("Nacional", "FructuosoPadilla"))],
+        ["Fructuoso Padilla", new TruthTable()
+            .with(Sentence.build("Republicano", "AnselmoRubiales"))
+            .with(Sentence.build("Nacional", "FructuosoPadilla"))],
+        ["Jacinta Osorio", new TruthTable()
+            .with(Sentence.build("Republicano", "AnselmoRubiales"))
+            .with(Sentence.build("Nacional", "FructuosoPadilla"))],
+        ["Raquel Aranda", new TruthTable()
+            .with(Sentence.build("Republicano", "AnselmoRubiales"))
+            .with(Sentence.build("Nacional", "FructuosoPadilla"))],
+        ["Maria Rosa Lloreda", new TruthTable()
+            .with(Sentence.build("Republicano", "AnselmoRubiales"))
+            .with(Sentence.build("Nacional", "FructuosoPadilla"))],
+        ["Antonio Fuster", new TruthTable()
+            .with(Sentence.build("Republicano", "AnselmoRubiales"))
+            .with(Sentence.build("Nacional", "FructuosoPadilla"))],
+        ["Socorro Fuster", new TruthTable()],
     ]);
     
     static tableFrom(actorName: string): TruthTable{

@@ -2,7 +2,7 @@ import { Agent } from "agents-flow";
 import { Aspect, Likes, SexKind, OriginKind, EyeColor, HairColor, HaircutStyle, ComplexionKind, SpecieKind } from "npc-aspect";
 import { RelationSet, RelationFactory, RelationKind, Familiar } from "npc-relations";
 import { Happiness, Personality } from "npc-mind";
-import { TruthTable } from "first-order-logic";
+import { TruthTable, Sentence } from "first-order-logic";
 
 export class AgentRepository{
     private _elements: Agent[];
@@ -23,7 +23,8 @@ export class AgentRepository{
             new Happiness(0),
             new Personality(60, 40, 50, 50, 60),
             Likes.likesSpecieAndSex(SpecieKind.Human, SexKind.Female),
-            new TruthTable(),
+            new TruthTable()
+                .with(Sentence.build("Republicano", "AnselmoRubiales")),
             false
         ));
 
@@ -40,7 +41,8 @@ export class AgentRepository{
             new Happiness(),
             new Personality(70, 60, 80, 70, 70),
             Likes.likesSpecieAndSex(SpecieKind.Human, SexKind.Female),
-            new TruthTable(),
+            new TruthTable()
+                .with(Sentence.build("Nacional", "FructuosoPadilla")),
             false
         ));
 
