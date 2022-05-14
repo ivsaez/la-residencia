@@ -16,7 +16,7 @@ export class InteractionRepository{
     constructor(){
         this._elements = [];
 
-        this._elements.push(new Interaction(
+        /*this._elements.push(new Interaction(
             "SaludoInteraction",
             "Saludar a [Saludado]",
             new RolesDescriptor("Saludador", [ "Saludado"] ),
@@ -33,9 +33,9 @@ export class InteractionRepository{
                 && !postconditions.exists(Sentence.build("Saludados", roles.get("Saludador").Individual.name, roles.get("Saludado").Individual.name, true)),
             (roles, map) => new TruthTable()
                 .with(Sentence.build("Saludados", roles.get("Saludador").Individual.name, roles.get("Saludado").Individual.name, true))
-            ));
+            ));*/
 
-        this._elements.push(new Interaction(
+        /*this._elements.push(new Interaction(
             "PalmadaInteraction",
             "Palmear la espalda de [Palmeado]",
             new RolesDescriptor("Palmero", [ "Palmeado"] ),
@@ -52,9 +52,9 @@ export class InteractionRepository{
                 && !postconditions.exists(Sentence.build("Saludados", roles.get("Palmero").Individual.name, roles.get("Palmeado").Individual.name, true)),
             (roles, map) => new TruthTable()
                 .with(Sentence.build("Saludados", roles.get("Palmero").Individual.name, roles.get("Palmeado").Individual.name, true))
-            ));
+            ));*/
 
-        this._elements.push(new Interaction(
+        /*this._elements.push(new Interaction(
             "PresentacionInteraction",
             "Presentar [Presentado] a [Oyente]",
             new RolesDescriptor("Presentador", [ "Oyente", "Presentado"] ),
@@ -100,9 +100,9 @@ export class InteractionRepository{
 
                 return TruthTable.empty;
             }
-        ));
+        ));*/
         
-        this._elements.push(new Interaction(
+        /*this._elements.push(new Interaction(
             "PreguntarNympho",
             "Preguntarle a [PosibleNympho] si es nimfómana",
             new RolesDescriptor("Preguntador", [ "PosibleNympho" ]),
@@ -128,9 +128,9 @@ export class InteractionRepository{
                 && map.areInTheSameLocation(roles.get("Preguntador"), roles.get("PosibleNympho"))
                 && postconditions.exists(Sentence.build("Saludados", roles.get("Preguntador").Individual.name, roles.get("PosibleNympho").Individual.name, true))
                 && !postconditions.exists(Sentence.build("Nymphomaniac", roles.get("PosibleNympho").Individual.name)),
-            ));
+            ));*/
 
-        this._elements.push(new Interaction(
+        /*this._elements.push(new Interaction(
             "IrLavabo",
             "[Desplazado] se mete en el baño.",
             new RolesDescriptor("Desplazado"),
@@ -148,9 +148,9 @@ export class InteractionRepository{
                 map.move(roles.get("Desplazado"), map.getLocation("Bath"));
                 return TruthTable.empty;
             },
-        ));
+        ));*/
 
-        this._elements.push(new Interaction(
+        /*this._elements.push(new Interaction(
             "Mear",
             "[Meador] mea en el lavabo.",
             new RolesDescriptor("Meador"),
@@ -163,9 +163,9 @@ export class InteractionRepository{
                 map.getUbication(roles.get("Meador")).name === map.getLocation("Bath").name
                 && !postconditions.exists(Sentence.build("Meado", roles.get("Meador").Individual.name)),
             (roles, map) => new TruthTable().with(Sentence.build("Meado", roles.get("Meador").Individual.name)),
-        ));
+        ));*/
 
-        this._elements.push(new Interaction(
+        /*this._elements.push(new Interaction(
             "VolverLavabo",
             "[Desplazado] vuelve del baño.",
             new RolesDescriptor("Desplazado"),
@@ -182,9 +182,9 @@ export class InteractionRepository{
                 map.move(roles.get("Desplazado"), map.getLocation("Salon"));
                 return TruthTable.empty;
             },
-        ));
+        ));*/
 
-        this._elements.push(new Interaction(
+        /*this._elements.push(new Interaction(
             "Beber",
             "[Bebedor] bebe.",
             new RolesDescriptor("Bebedor"),
@@ -196,9 +196,9 @@ export class InteractionRepository{
             (postconditions, roles, map) =>
                 map.getUbication(roles.get("Bebedor")).name === map.getLocation("Salon").name
                 && check(roles.get("Bebedor").Personality.politeUnpolite)
-        ));
+        ));*/
 
-        this._elements.push(new Interaction(
+        /*this._elements.push(new Interaction(
             "Bailar",
             "[Bailaor] baila.",
             new RolesDescriptor("Bailaor"),
@@ -210,7 +210,7 @@ export class InteractionRepository{
             (postconditions, roles, map) =>
                 map.getUbication(roles.get("Bailaor")).name === map.getLocation("Salon").name
                 && check(roles.get("Bailaor").Personality.politeUnpolite)
-        ));
+        ));*/
     }
 
     get all(){

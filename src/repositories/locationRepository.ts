@@ -7,12 +7,15 @@ export class LocationRepository{
         this._elements = [];
 
         let salon = new Location("Salon");
-        let bath = new Location("Bath");
+        let bath = new Location("Lavabo");
+        let terrace = new Location("Terraza");
 
         this._elements.push(salon);
         this._elements.push(bath);
+        this._elements.push(terrace);
 
         Location.join(salon, bath);
+        Location.join(salon, terrace);
     }
 
     get all(){
