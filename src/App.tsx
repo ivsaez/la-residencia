@@ -1,4 +1,4 @@
-import { Desire, MapStructure, World, Scenario, FinishingConditions, Agents, Input } from 'agents-flow';
+import { MapStructure, World, Scenario, FinishingConditions, Agents, Input } from 'agents-flow';
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import { AgentRepository } from './repositories/agentRepository';
@@ -9,13 +9,16 @@ import { Rules } from './logic/rules';
 import { Tables } from './logic/truthTables';
 import { parse } from "./reactionsParser";
 
+const CONTINUE = "Continuar";
+const START = "Comenzar";
+
 function App() {
 
   const [ count, setCount ] = useState(0);
-  const [ output, setOutput ] = useState([ "The adventure starts now:" ] as string[]);
+  const [ output, setOutput ] = useState([ "--LA RESIDENCIA--" ] as string[]);
 
   const [ world, setWorld ] = useState(null as World);
-  const [ choices, setChoices ] = useState([ "Start" ] as string[])
+  const [ choices, setChoices ] = useState([ START ] as string[])
 
   let agents: AgentRepository = new AgentRepository();
   let locations: LocationRepository = new LocationRepository();
@@ -65,19 +68,19 @@ function App() {
   }
 
   function initializeAgentDesires(): void{
-    let ron = agents.get("Ron");
+    /*let ron = agents.get("Ron");
     let agatha = agents.get("Agatha");
 
     ron.Desires.append(new Desire(crowd => {
       let aga = crowd.get("Agatha");
       let relation = aga.Relations.get("Ron");
       return (relation.metrics.friendship + relation.metrics.love + agatha.Happiness.value) / 3;
-    }, [ agatha.Name ]));
+    }, [ agatha.Name ]));*/
   }
 
   function createWorld(): void{
-    var salutationsScenario = new Scenario(
-      "Saludo en el salón",
+    var residenceScenario = new Scenario(
+      "En la residencia",
       map,
       new Agents(agents.all),
       interactions.all,
@@ -85,7 +88,7 @@ function App() {
           .with(scenario => scenario.turn === 100));
     
     let newWorld = new World();
-    newWorld.add(salutationsScenario);
+    newWorld.add(residenceScenario);
 
     setWorld(newWorld);
   }
@@ -98,7 +101,7 @@ function App() {
 
     let input = Input.void();
     if(button != null){
-      if(button.innerText !== "Continue" && button.innerText !== "Start"){
+      if(button.innerText !== CONTINUE && button.innerText !== START){
         input = new Input(Number(button.name));
       }
     }
@@ -117,7 +120,7 @@ function App() {
       setChoices(newChoices);
     }
     else{
-      newChoices.push("Continue");
+      newChoices.push(CONTINUE);
       setChoices(newChoices);
     }
 

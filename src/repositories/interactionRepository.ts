@@ -16,6 +16,37 @@ export class InteractionRepository{
     constructor(){
         this._elements = [];
 
+        this._elements.push(new Interaction(
+            "EmpezarTrabajar",
+            "Empezar a trabajar",
+            new RolesDescriptor("Trabajador"),
+            [
+                new Phrase("Trabajador")
+                    .withAlternative(roles => "[Trabajador] comienza su jornada en la residencia.")
+            ],
+            Timing.Single,
+            (postconditions, roles, map) => 
+                !postconditions.exists(Sentence.build("Trabajando", roles.get("Trabajador").Individual.name)) &&
+                roles.get("Trabajador").Characteristics.exists(Sentence.build("Auxiliar", roles.get("Trabajador").Individual.name)),
+            (roles, map) => new TruthTable()
+                .with(Sentence.build("Trabajando", roles.get("Trabajador").Individual.name))
+            ));
+
+        this._elements.push(new Interaction(
+            "SubirPersiana",
+            "Subir la persiana",
+            new RolesDescriptor("Subidor"),
+            [
+                new Phrase("Subidor")
+                    .withAlternative(roles => "[Subidor] sube una persiana del salón.")
+            ],
+            Timing.Single,
+            (postconditions, roles, map) => 
+                postconditions.exists(Sentence.build("Trabajando", roles.get("Subidor").Individual.name)) &&
+                roles.get("Subidor").Characteristics.exists(Sentence.build("Auxiliar", roles.get("Subidor").Individual.name)),
+            (roles, map) => TruthTable.empty
+            ));
+
         /*this._elements.push(new Interaction(
             "SaludoInteraction",
             "Saludar a [Saludado]",
