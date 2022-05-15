@@ -6,9 +6,9 @@ import {
     Timing 
 } from "agents-flow";
 import { TruthTable, Sentence } from "first-order-logic";
-import { SexKind } from "npc-aspect";
-import { Effect, EffectComponent, EffectKind, EffectStrength } from "npc-emotional";
-import { check } from "role-methods";
+//import { SexKind } from "npc-aspect";
+//import { Effect, EffectComponent, EffectKind, EffectStrength } from "npc-emotional";
+//import { check } from "role-methods";
 
 export class InteractionRepository{
     private _elements: IInteraction[];
@@ -17,35 +17,54 @@ export class InteractionRepository{
         this._elements = [];
 
         this._elements.push(new Interaction(
-            "EmpezarTrabajar",
-            "Empezar a trabajar",
-            new RolesDescriptor("Trabajador"),
-            [
-                new Phrase("Trabajador")
-                    .withAlternative(roles => "[Trabajador] comienza su jornada en la residencia.")
-            ],
-            Timing.Single,
-            (postconditions, roles, map) => 
-                !postconditions.exists(Sentence.build("Trabajando", roles.get("Trabajador").Individual.name)) &&
-                roles.get("Trabajador").Characteristics.exists(Sentence.build("Auxiliar", roles.get("Trabajador").Individual.name)),
-            (roles, map) => new TruthTable()
-                .with(Sentence.build("Trabajando", roles.get("Trabajador").Individual.name))
-            ));
-
-        this._elements.push(new Interaction(
             "SubirPersiana",
             "Subir la persiana",
             new RolesDescriptor("Subidor"),
             [
                 new Phrase("Subidor")
-                    .withAlternative(roles => "[Subidor] sube una persiana del salón.")
+                    .withAlternative(roles => "[Subidor] sube la persiana de una de las ventanas del salón.")
             ],
             Timing.Single,
             (postconditions, roles, map) => 
-                postconditions.exists(Sentence.build("Trabajando", roles.get("Subidor").Individual.name)) &&
-                roles.get("Subidor").Characteristics.exists(Sentence.build("Auxiliar", roles.get("Subidor").Individual.name)),
+                map.getUbication(roles.get("Subidor")).name === "Salon" 
+                && roles.get("Subidor").Characteristics.exists(Sentence.build("Auxiliar", roles.get("Subidor").Individual.name)),
             (roles, map) => TruthTable.empty
-            ));
+        ));
+
+        this._elements.push(new Interaction(
+            "CorrerCortinas",
+            "Correr las cortinas",
+            new RolesDescriptor("Corredor"),
+            [
+                new Phrase("Corredor")
+                    .withAlternative(roles => "[Corredor] corre las cortinas de una de las ventanas del salón.")
+            ],
+            Timing.Single,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Corredor")).name === "Salon" 
+                && roles.get("Corredor").Characteristics.exists(Sentence.build("Auxiliar", roles.get("Corredor").Individual.name)),
+            (roles, map) => TruthTable.empty
+        ));
+
+        this._elements.push(new Interaction(
+            "EmpezarTrabajar",
+            "Empezar a trabajar",
+            new RolesDescriptor("Trabajador"),
+            [
+                new Phrase("Trabajador")
+                    .withAlternative(roles => "[Trabajador] llega apresuradamente al salón."),
+                new Phrase("Trabajador")
+                    .withAlternative(roles => "[Trabajador]: ¡Se me ha escapado otra vez el autobús.")
+            ],
+            Timing.Single,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Trabajador")).name === "Limbo"
+                && roles.get("Trabajador").Characteristics.exists(Sentence.build("Auxiliar", roles.get("Trabajador").Individual.name)),
+            (roles, map) => {
+                map.move(roles.get("Trabajador"), map.getLocation("Salon"));
+                return TruthTable.empty;
+            }
+        ));
 
         /*this._elements.push(new Interaction(
             "SaludoInteraction",

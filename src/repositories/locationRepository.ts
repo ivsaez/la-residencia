@@ -9,13 +9,16 @@ export class LocationRepository{
         let salon = new Location("Salon");
         let bath = new Location("Lavabo");
         let terrace = new Location("Terraza");
+        let limbo = new Location("Limbo");
 
         this._elements.push(salon);
         this._elements.push(bath);
         this._elements.push(terrace);
+        this._elements.push(limbo);
 
         Location.join(salon, bath);
         Location.join(salon, terrace);
+        Location.join(salon, limbo);
     }
 
     get all(){

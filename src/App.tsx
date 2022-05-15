@@ -60,11 +60,13 @@ function App() {
   }
 
   function intializeAgentsLocation(): void{
-    let salon = map.getLocation("Salon");
+    let limbo = map.getLocation("Limbo");
 
     for(let agent of agents.all){
-      map.move(agent, salon);
+      map.move(agent, limbo);
     }
+
+    map.move(agents.get("Raquel"), map.getLocation("Salon"));
   }
 
   function initializeAgentDesires(): void{
