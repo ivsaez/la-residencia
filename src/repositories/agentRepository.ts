@@ -2,7 +2,6 @@ import { Agent } from "agents-flow";
 import { Aspect, Likes, SexKind, OriginKind, EyeColor, HairColor, HaircutStyle, ComplexionKind, SpecieKind } from "npc-aspect";
 import { RelationSet, RelationFactory, RelationKind, Familiar } from "npc-relations";
 import { Happiness, Personality } from "npc-mind";
-import { TruthTable, Sentence } from "first-order-logic";
 
 export class AgentRepository{
     private _elements: Agent[];
@@ -23,8 +22,7 @@ export class AgentRepository{
             new Happiness(0),
             new Personality(60, 40, 50, 50, 60),
             Likes.likesSpecieAndSex(SpecieKind.Human, SexKind.Female),
-            new TruthTable()
-                .with(Sentence.build("Republicano", "Anselmo")),
+            [ "Republicano", "Residente" ],
             false
         ));
 
@@ -41,8 +39,7 @@ export class AgentRepository{
             new Happiness(),
             new Personality(70, 60, 80, 70, 70),
             Likes.likesSpecieAndSex(SpecieKind.Human, SexKind.Female),
-            new TruthTable()
-                .with(Sentence.build("Nacional", "Fructuoso")),
+            [ "Nacional", "Residente", "Impedido" ],
             false
         ));
 
@@ -59,7 +56,7 @@ export class AgentRepository{
             new Happiness(),
             new Personality(90, 30, 20, 30, 90),
             Likes.likesSpecieAndSex(SpecieKind.Human, SexKind.Male),
-            new TruthTable(),
+            [ "Residente", "Impedido" ],
             true
         ));
 
@@ -76,8 +73,7 @@ export class AgentRepository{
             new Happiness(70),
             new Personality(70, 70, 20, 50, 40),
             Likes.likesSpecieAndSex(SpecieKind.Human, SexKind.Male),
-            new TruthTable()
-                .with(Sentence.build("Auxiliar", "Raquel")),
+            [ "Auxiliar" ],
             false
         ));
 
@@ -94,8 +90,7 @@ export class AgentRepository{
             new Happiness(70),
             new Personality(70, 90, 40, 70, 50),
             Likes.likesSpecieAndSex(SpecieKind.Human, SexKind.Male),
-            new TruthTable()
-                .with(Sentence.build("Auxiliar", "Maria")),
+            [ "Auxiliar" ],
             false
         ));
 
@@ -112,7 +107,7 @@ export class AgentRepository{
             new Happiness(),
             new Personality(40, 30, 20, 20, 20),
             Likes.likesSpecieAndSex(SpecieKind.Human, SexKind.Female),
-            new TruthTable(),
+            [ "Residente", "Impedido" ],
             false
         ));
 
@@ -128,8 +123,8 @@ export class AgentRepository{
                 .append("Anselmo", RelationFactory.get(RelationKind.Neutral)),
             new Happiness(),
             new Personality(70, 30, 20, 20, 20),
-            Likes.likesSpecieAndSex(SpecieKind.Human, SexKind.Female),
-            new TruthTable(),
+            Likes.likesSpecieAndSex(SpecieKind.Human, SexKind.Male),
+            [],
             false
         ));
     }

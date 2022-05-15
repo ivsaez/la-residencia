@@ -27,8 +27,9 @@ export class InteractionRepository{
             Timing.Single,
             (postconditions, roles, map) => 
                 map.getUbication(roles.get("Subidor")).name === "Salon" 
-                && roles.get("Subidor").Characteristics.exists(Sentence.build("Auxiliar", roles.get("Subidor").Individual.name)),
-            (roles, map) => TruthTable.empty
+                && roles.get("Subidor").Characteristics.is("Auxiliar"),
+            (roles, map) => new TruthTable()
+                .with(Sentence.build("Luz"))
         ));
 
         this._elements.push(new Interaction(
@@ -42,8 +43,9 @@ export class InteractionRepository{
             Timing.Single,
             (postconditions, roles, map) => 
                 map.getUbication(roles.get("Corredor")).name === "Salon" 
-                && roles.get("Corredor").Characteristics.exists(Sentence.build("Auxiliar", roles.get("Corredor").Individual.name)),
-            (roles, map) => TruthTable.empty
+                && roles.get("Corredor").Characteristics.is("Auxiliar"),
+            (roles, map) => new TruthTable()
+                .with(Sentence.build("Luz"))
         ));
 
         this._elements.push(new Interaction(
@@ -59,9 +61,29 @@ export class InteractionRepository{
             Timing.Single,
             (postconditions, roles, map) => 
                 map.getUbication(roles.get("Trabajador")).name === "Limbo"
-                && roles.get("Trabajador").Characteristics.exists(Sentence.build("Auxiliar", roles.get("Trabajador").Individual.name)),
+                && roles.get("Trabajador").Characteristics.is("Auxiliar"),
             (roles, map) => {
                 map.move(roles.get("Trabajador"), map.getLocation("Salon"));
+                return TruthTable.empty;
+            }
+        ));
+
+        this._elements.push(new Interaction(
+            "BajarEscaleras",
+            "Bajar las escaleras",
+            new RolesDescriptor("Bajador"),
+            [
+                new Phrase("Bajador")
+                    .withAlternative(roles => "[Bajador] baja las escaleras cuidadosamente, con paso cansado.")
+            ],
+            Timing.Single,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Bajador")).name === "Limbo"
+                && postconditions.exists(Sentence.build("Luz"))
+                && roles.get("Bajador").Characteristics.is("Residente")
+                && !roles.get("Bajador").Characteristics.is("Impedido"),
+            (roles, map) => {
+                map.move(roles.get("Bajador"), map.getLocation("Salon"));
                 return TruthTable.empty;
             }
         ));
