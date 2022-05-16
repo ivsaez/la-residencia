@@ -13,7 +13,7 @@ export class Tables{
             .with(Sentence.build("Residente", "Antonio"))
             .with(Sentence.build("Impedido", "Fructuoso"))
             .with(Sentence.build("Impedido", "Jacinta"))
-            .with(Sentence.build("Impedido", "Antonio"))],
+            .with(Sentence.build("Demente", "Antonio"))],
         ["Fructuoso", new TruthTable()
             .with(Sentence.build("Republicano", "Anselmo"))
             .with(Sentence.build("Nacional", "Fructuoso"))
@@ -25,7 +25,7 @@ export class Tables{
             .with(Sentence.build("Residente", "Antonio"))
             .with(Sentence.build("Impedido", "Fructuoso"))
             .with(Sentence.build("Impedido", "Jacinta"))
-            .with(Sentence.build("Impedido", "Antonio"))],
+            .with(Sentence.build("Demente", "Antonio"))],
         ["Jacinta", new TruthTable()
             .with(Sentence.build("Republicano", "Anselmo"))
             .with(Sentence.build("Nacional", "Fructuoso"))
@@ -37,7 +37,7 @@ export class Tables{
             .with(Sentence.build("Residente", "Antonio"))
             .with(Sentence.build("Impedido", "Fructuoso"))
             .with(Sentence.build("Impedido", "Jacinta"))
-            .with(Sentence.build("Impedido", "Antonio"))],
+            .with(Sentence.build("Demente", "Antonio"))],
         ["Raquel", new TruthTable()
             .with(Sentence.build("Republicano", "Anselmo"))
             .with(Sentence.build("Nacional", "Fructuoso"))
@@ -49,7 +49,7 @@ export class Tables{
             .with(Sentence.build("Residente", "Antonio"))
             .with(Sentence.build("Impedido", "Fructuoso"))
             .with(Sentence.build("Impedido", "Jacinta"))
-            .with(Sentence.build("Impedido", "Antonio"))],
+            .with(Sentence.build("Demente", "Antonio"))],
         ["Maria", new TruthTable()
             .with(Sentence.build("Republicano", "Anselmo"))
             .with(Sentence.build("Nacional", "Fructuoso"))
@@ -61,7 +61,7 @@ export class Tables{
             .with(Sentence.build("Residente", "Antonio"))
             .with(Sentence.build("Impedido", "Fructuoso"))
             .with(Sentence.build("Impedido", "Jacinta"))
-            .with(Sentence.build("Impedido", "Antonio"))],
+            .with(Sentence.build("Demente", "Antonio"))],
         ["Antonio", new TruthTable()
             .with(Sentence.build("Republicano", "Anselmo"))
             .with(Sentence.build("Nacional", "Fructuoso"))
@@ -73,7 +73,7 @@ export class Tables{
             .with(Sentence.build("Residente", "Antonio"))
             .with(Sentence.build("Impedido", "Fructuoso"))
             .with(Sentence.build("Impedido", "Jacinta"))
-            .with(Sentence.build("Impedido", "Antonio"))],
+            .with(Sentence.build("Demente", "Antonio"))],
         ["Socorro", new TruthTable()
             .with(Sentence.build("Auxiliar", "Raquel"))
             .with(Sentence.build("Auxiliar", "Maria"))
@@ -83,7 +83,7 @@ export class Tables{
             .with(Sentence.build("Residente", "Antonio"))
             .with(Sentence.build("Impedido", "Fructuoso"))
             .with(Sentence.build("Impedido", "Jacinta"))
-            .with(Sentence.build("Impedido", "Antonio"))],
+            .with(Sentence.build("Demente", "Antonio"))],
     ]);
     
     static tableFrom(actorName: string): TruthTable{

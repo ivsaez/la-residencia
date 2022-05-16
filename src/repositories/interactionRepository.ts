@@ -6,7 +6,7 @@ import {
     Timing 
 } from "agents-flow";
 import { TruthTable, Sentence } from "first-order-logic";
-//import { SexKind } from "npc-aspect";
+import { SexKind } from "npc-aspect";
 //import { Effect, EffectComponent, EffectKind, EffectStrength } from "npc-emotional";
 //import { check } from "role-methods";
 
@@ -81,11 +81,107 @@ export class InteractionRepository{
                 map.getUbication(roles.get("Bajador")).name === "Limbo"
                 && postconditions.exists(Sentence.build("Luz"))
                 && roles.get("Bajador").Characteristics.is("Residente")
-                && !roles.get("Bajador").Characteristics.is("Impedido"),
+                && !roles.get("Bajador").Characteristics.is("Impedido")
+                && !roles.get("Bajador").Characteristics.is("Demente"),
             (roles, map) => {
                 map.move(roles.get("Bajador"), map.getLocation("Salon"));
                 return TruthTable.empty;
             }
+        ));
+
+        this._elements.push(new Interaction(
+            "BajarAscensor",
+            "Bajar el ascensor",
+            new RolesDescriptor("Bajador"),
+            [
+                new Phrase("Bajador")
+                    .withAlternative(roles => "Se abre la puerta del ascensor y [Bajador] sale trabajosamente para llegar al salón.")
+            ],
+            Timing.Single,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Bajador")).name === "Limbo"
+                && postconditions.exists(Sentence.build("Luz"))
+                && roles.get("Bajador").Characteristics.is("Residente")
+                && roles.get("Bajador").Characteristics.is("Impedido")
+                && !roles.get("Bajador").Characteristics.is("Demente"),
+            (roles, map) => {
+                map.move(roles.get("Bajador"), map.getLocation("Salon"));
+                return TruthTable.empty;
+            }
+        ));
+
+        this._elements.push(new Interaction(
+            "BuecarDemente",
+            "Ir a buscar al residente demente",
+            new RolesDescriptor("Buscador", [ "Demente" ]),
+            [
+                new Phrase("Buscador", "Demente")
+                    .withAlternative(roles => "[Buscador]: Subo a buscar a [Demente]."),
+                new Phrase("Buscador", "Demente")
+                    .withAlternative(roles => "[Buscador] baja por el ascensor con [Demente] sentado en su silla de ruedas.")
+            ],
+            Timing.Single,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Buscador")).name === "Salon"
+                && map.getUbication(roles.get("Demente")).name === "Limbo"
+                && postconditions.exists(Sentence.build("Luz"))
+                && roles.get("Buscador").Characteristics.is("Auxiliar")
+                && roles.get("Demente").Characteristics.is("Residente")
+                && roles.get("Demente").Characteristics.is("Demente"),
+            (roles, map) => {
+                map.move(roles.get("Demente"), map.getLocation("Salon"));
+                return TruthTable.empty;
+            }
+        ));
+
+        this._elements.push(new Interaction(
+            "SaludoResidenteAuxiliar",
+            "[Saludador] saluda a una [Saludado]",
+            new RolesDescriptor("Saludador", [ "Saludado" ]),
+            [
+                new Phrase("Saludador", "Saludado")
+                    .withAlternative(roles => "[Saludador]: ¡Buenos dias [Saludado]!"),
+                new Phrase("Saludado")
+                    .withAlternative(roles => roles.get("Saludador").Aspect.sex === SexKind.Male
+                        ? "[Saludado]: Buenos dias caballero."
+                        : "[Saludado]: Buenos dias señorita.")
+            ],
+            Timing.Single,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Saludador")).name === "Salon"
+                && map.areInTheSameLocation(roles.get("Saludador"), roles.get("Saludado"))
+                && roles.get("Saludado").Characteristics.is("Auxiliar")
+                && roles.get("Saludador").Characteristics.is("Residente")
+                && !roles.get("Saludador").Characteristics.is("Demente")
+                && !roles.get("Saludado").Characteristics.is("Demente")
+                && !postconditions.exists(Sentence.build("Saludo", roles.get("Saludador").Individual.name, roles.get("Saludado").Individual.name, true)),
+            (roles, map) => new TruthTable()
+                .with(Sentence.build("Saludo", roles.get("Saludador").Individual.name, roles.get("Saludado").Individual.name, true))
+        ));
+
+        this._elements.push(new Interaction(
+            "SaludoAuxiliarResidente",
+            "[Saludador] saluda a una [Saludado]",
+            new RolesDescriptor("Saludador", [ "Saludado" ]),
+            [
+                new Phrase("Saludador", "Saludado")
+                    .withAlternative(roles => roles.get("Saludado").Aspect.sex === SexKind.Male
+                        ? "[Saludador]: Buenos dias don [Saludado]."
+                        : "[Saludador]: Buenos dias doña [Saludado]."),
+                new Phrase("Saludado")
+                    .withAlternative(roles => "[Saludado]: Buenos dias guapa.")
+            ],
+            Timing.Single,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Saludador")).name === "Salon"
+                && map.areInTheSameLocation(roles.get("Saludador"), roles.get("Saludado"))
+                && roles.get("Saludador").Characteristics.is("Auxiliar")
+                && roles.get("Saludado").Characteristics.is("Residente")
+                && !roles.get("Saludador").Characteristics.is("Demente")
+                && !roles.get("Saludado").Characteristics.is("Demente")
+                && !postconditions.exists(Sentence.build("Saludo", roles.get("Saludador").Individual.name, roles.get("Saludado").Individual.name, true)),
+            (roles, map) => new TruthTable()
+                .with(Sentence.build("Saludo", roles.get("Saludador").Individual.name, roles.get("Saludado").Individual.name, true))
         ));
 
         /*this._elements.push(new Interaction(

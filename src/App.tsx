@@ -108,7 +108,8 @@ function App() {
       }
     }
 
-    let step = world.currentScenario.performStep(input);
+    let scenario = world.currentScenario;
+    let step = scenario.performStep(input);
     setWorld(world);
     
     show(step.content);

@@ -107,7 +107,7 @@ export class AgentRepository{
             new Happiness(),
             new Personality(40, 30, 20, 20, 20),
             Likes.likesSpecieAndSex(SpecieKind.Human, SexKind.Female),
-            [ "Residente", "Impedido" ],
+            [ "Residente", "Demente" ],
             false
         ));
 

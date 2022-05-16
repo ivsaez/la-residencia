@@ -8,6 +8,8 @@ export class Functions{
         new Function("Auxiliar", Cardinality.One),
         new Function("Residente", Cardinality.One),
         new Function("Impedido", Cardinality.One),
+        new Function("Demente", Cardinality.One),
+        new Function("Saludo", Cardinality.Two),
     ];
 
     static get all(): Function[]{
