@@ -184,43 +184,60 @@ export class InteractionRepository{
                 .with(Sentence.build("Saludo", roles.get("Saludador").Individual.name, roles.get("Saludado").Individual.name, true))
         ));
 
-        /*this._elements.push(new Interaction(
-            "SaludoInteraction",
-            "Saludar a [Saludado]",
-            new RolesDescriptor("Saludador", [ "Saludado"] ),
+        this._elements.push(new Interaction(
+            "Sentarse",
+            "[Sentador] se sienta",
+            new RolesDescriptor("Sentador"),
             [
-                new Phrase("Saludador", "Saludado")
-                    .withAlternative(roles => "[Saludador]:Dame un beso [Saludado].")
+                new Phrase("Sentador")
+                    .withAlternative(roles => "[Sentador] se sienta pesadamente en un butacón del salón.")
             ],
             Timing.Single,
             (postconditions, roles, map) => 
-                (roles.get("Saludador").Aspect.sex === SexKind.Female
-                || roles.get("Saludado").Aspect.sex === SexKind.Female)
-                && roles.get("Saludador").Relations.knows(roles.get("Saludado").Name)
-                && map.areInTheSameLocation(roles.get("Saludador"), roles.get("Saludado"))
-                && !postconditions.exists(Sentence.build("Saludados", roles.get("Saludador").Individual.name, roles.get("Saludado").Individual.name, true)),
-            (roles, map) => new TruthTable()
-                .with(Sentence.build("Saludados", roles.get("Saludador").Individual.name, roles.get("Saludado").Individual.name, true))
-            ));*/
+                map.getUbication(roles.get("Sentador")).name === "Salon" 
+                && roles.get("Sentador").Characteristics.is("Residente")
+                && !roles.get("Sentador").Characteristics.is("Impedido")
+                && !roles.get("Sentador").Characteristics.is("Demente"),
+            (roles, map) => TruthTable.empty
+        ));
 
-        /*this._elements.push(new Interaction(
-            "PalmadaInteraction",
-            "Palmear la espalda de [Palmeado]",
-            new RolesDescriptor("Palmero", [ "Palmeado"] ),
+        this._elements.push(new Interaction(
+            "AbrirLavabo",
+            "[Abridor] abre el lavabo",
+            new RolesDescriptor("Abridor"),
             [
-                new Phrase("Palmero", "Palmeado")
-                    .withAlternative(roles => "[Palmero] le da una sonora palmada en la espalda a [Palmeado].")
+                new Phrase("Abridor")
+                    .withAlternative(roles => "[Abridor] quita la llave de la puerta del lavabo.")
             ],
             Timing.Single,
             (postconditions, roles, map) => 
-                roles.get("Palmero").Aspect.sex === SexKind.Male
-                && roles.get("Palmeado").Aspect.sex === SexKind.Male
-                && roles.get("Palmero").Relations.knows(roles.get("Palmeado").Name)
-                && map.areInTheSameLocation(roles.get("Palmero"), roles.get("Palmeado"))
-                && !postconditions.exists(Sentence.build("Saludados", roles.get("Palmero").Individual.name, roles.get("Palmeado").Individual.name, true)),
+                !postconditions.exists(Sentence.build("Lavabo"))
+                && map.getUbication(roles.get("Abridor")).name === "Salon" 
+                && map.getLocation("Salon").agents.length >= 4
+                && postconditions.exists(Sentence.build("Luz"))
+                && roles.get("Abridor").Characteristics.is("Auxiliar"),
             (roles, map) => new TruthTable()
-                .with(Sentence.build("Saludados", roles.get("Palmero").Individual.name, roles.get("Palmeado").Individual.name, true))
-            ));*/
+                .with(Sentence.build("Lavabo"))
+        ));
+
+        this._elements.push(new Interaction(
+            "AbrirBalcon",
+            "[Abridor] abre el balcon",
+            new RolesDescriptor("Abridor"),
+            [
+                new Phrase("Abridor")
+                    .withAlternative(roles => "[Abridor] quita la llave de la puerta del balcón.")
+            ],
+            Timing.Single,
+            (postconditions, roles, map) => 
+                !postconditions.exists(Sentence.build("Balcon"))
+                && map.getUbication(roles.get("Abridor")).name === "Salon" 
+                && map.getLocation("Salon").agents.length >= 4
+                && postconditions.exists(Sentence.build("Luz"))
+                && roles.get("Abridor").Characteristics.is("Auxiliar"),
+            (roles, map) => new TruthTable()
+                .with(Sentence.build("Balcon"))
+        ));
 
         /*this._elements.push(new Interaction(
             "PresentacionInteraction",
