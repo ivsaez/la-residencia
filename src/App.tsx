@@ -1,4 +1,4 @@
-import { MapStructure, World, Scenario, FinishingConditions, Agents, Input } from 'agents-flow';
+import { MapStructure, World, Scenario, FinishingConditions, Agents, Input, ScenarioEndNoInteractions, ScenarioEndAllConditionsMet } from 'agents-flow';
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import { AgentRepository } from './repositories/agentRepository';
@@ -143,8 +143,16 @@ function App() {
   }
 
   function show(texts: string[]): void{
-    for(let text of texts){
-      output.push(text);
+    if(texts.length === 1 && texts[0] === ScenarioEndNoInteractions){
+      output.push("No quedan más interacciones.");
+    }
+    else if(texts.length === 1 && texts[0] === ScenarioEndAllConditionsMet){
+      output.push("Se han cumplido todas las condiciones.");
+    }
+    else{
+      for(let text of texts){
+        output.push(text);
+      }
     }
     
     setOutput(output);

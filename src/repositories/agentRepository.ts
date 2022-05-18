@@ -87,7 +87,7 @@ export class AgentRepository{
                 .append("Anselmo", RelationFactory.get(RelationKind.Friend))
                 .append("Antonio", RelationFactory.get(RelationKind.Neutral))
                 .append("Socorro", RelationFactory.get(RelationKind.Friend)),
-            new Happiness(70),
+            new Happiness(30),
             new Personality(70, 90, 40, 70, 50),
             Likes.likesSpecieAndSex(SpecieKind.Human, SexKind.Male),
             [ "Auxiliar" ],
