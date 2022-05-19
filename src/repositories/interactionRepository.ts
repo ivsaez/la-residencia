@@ -9,6 +9,7 @@ import { TruthTable, Sentence } from "first-order-logic";
 import { SexKind } from "npc-aspect";
 import { Effect, EffectComponent, EffectKind, EffectStrength } from "npc-emotional";
 import { randomFromList } from "role-methods";
+import { Familiar } from "npc-relations";
 
 export class InteractionRepository{
     private _elements: IInteraction[];
@@ -385,6 +386,97 @@ export class InteractionRepository{
             (roles, map) => new TruthTable()
                 .with(Sentence.build("Saludo", roles.get("Saludador").Individual.name, roles.get("Saludado").Individual.name, true))
         ).intimate());
+
+        this._elements.push(new Interaction(
+            "HijaAyudaFamiliar",
+            "[Hija] ayuda a [Padre]",
+            new RolesDescriptor("Hija", [ "Padre" ]),
+            [
+                new Phrase("Hija")
+                    .withAlternative(roles => randomFromList([
+                        "[Hija] arregla el cuello de la camisa de [Padre].",
+                        "[Hija] limpia un hilillo de saliva de [Padre].",
+                        "[Hija] arregla con sus dedos el despeinado pelo de [Padre].",
+                    ]))
+            ],
+            Timing.Repeteable,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Hija")).name === "Salon"
+                && map.areInTheSameLocation(roles.get("Hija"), roles.get("Padre"))
+                && roles.get("Hija").Relations.get(roles.get("Padre").Name).familiarity === Familiar.Parent,
+            (roles, map) => TruthTable.empty
+        ));
+
+        this._elements.push(new Interaction(
+            "TosCarraspeo",
+            "[Tosedor] tose o carraspea cerca de [Escuchador]",
+            new RolesDescriptor("Tosedor", [ "Escuchador" ]),
+            [
+                new Phrase("Tosedor", "Escuchador")
+                    .withAlternative(roles => randomFromList([
+                        "[Tosedor] tose con fuerza.",
+                        "[Tosedor] carraspea profusamente.",
+                    ]),
+                    roles => new Effect("Escuchador", [ 
+                        EffectComponent.negative(EffectKind.Sex, EffectStrength.Low),
+                        EffectComponent.negative(EffectKind.Happiness, EffectStrength.Low) 
+                    ]))
+            ],
+            Timing.Repeteable,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Tosedor")).name === "Salon"
+                && map.areInTheSameLocation(roles.get("Tosedor"), roles.get("Escuchador"))
+                && roles.get("Tosedor").Characteristics.is("Residente")
+                && roles.get("Escuchador").Characteristics.is("Auxiliar"),
+            (roles, map) => TruthTable.empty
+        ).intimate());
+
+        this._elements.push(new Interaction(
+            "EncenderTele",
+            "[Encendedor] enciende la tele",
+            new RolesDescriptor("Encendedor"),
+            [
+                new Phrase("Encendedor")
+                    .withAlternative(roles => "[Encendedor] enciende el televisor del salón."),
+                new Phrase("Encendedor")
+                    .withAlternative(roles => "En la tele están dando el \"Sálvame\".")
+            ],
+            Timing.GlobalSingle,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Encendedor")).name === "Salon"
+                && roles.get("Encendedor").Characteristics.is("Auxiliar")
+                && !postconditions.exists(Sentence.build("Tele")),
+            (roles, map) => new TruthTable()
+                .with(Sentence.build("TeleCorazon"))
+        ));
+
+        this._elements.push(new Interaction(
+            "PreguntaRacista",
+            "[Preguntador] hace pregunta racista",
+            new RolesDescriptor("Preguntador", [ "Preguntada" ]),
+            [
+                new Phrase("Preguntador")
+                    .withAlternative(
+                        roles => "[Preguntador]: Oye guapa, ¿todavía te juntas con el negro ese?",
+                        roles => new Effect("Preguntada", [
+                            EffectComponent.negative(EffectKind.Happiness, EffectStrength.Low),
+                            EffectComponent.negative(EffectKind.Friend, EffectStrength.Low)
+                        ])
+                    ),
+                new Phrase("Preguntada")
+                    .withAlternative(roles => "Perdone pero \"el negro ese\" tiene un nombre.")
+            ],
+            Timing.GlobalSingle,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Preguntador")).name === "Salon"
+                && map.areInTheSameLocation(roles.get("Preguntador"), roles.get("Preguntada"))
+                && roles.get("Preguntador").Characteristics.is("Residente")
+                && !roles.get("Preguntador").Characteristics.is("Demente")
+                && roles.get("Preguntador").Aspect.sex === SexKind.Male
+                && roles.get("Preguntada").Name === "Socorro",
+            (roles, map) => new TruthTable()
+                .with(Sentence.build("TeleCorazon"))
+        ));
 
         /*this._elements.push(new Interaction(
             "PresentacionInteraction",
