@@ -8,7 +8,7 @@ import {
 import { TruthTable, Sentence } from "first-order-logic";
 import { SexKind } from "npc-aspect";
 import { Effect, EffectComponent, EffectKind, EffectStrength } from "npc-emotional";
-import { randomFromList } from "role-methods";
+import { randomFromList, check } from "role-methods";
 import { Familiar } from "npc-relations";
 
 export class InteractionRepository{
@@ -427,7 +427,8 @@ export class InteractionRepository{
                 map.getUbication(roles.get("Tosedor")).name === "Salon"
                 && map.areInTheSameLocation(roles.get("Tosedor"), roles.get("Escuchador"))
                 && roles.get("Tosedor").Characteristics.is("Residente")
-                && roles.get("Escuchador").Characteristics.is("Auxiliar"),
+                && roles.get("Escuchador").Characteristics.is("Auxiliar")
+                && check(100 - roles.get("Tosedor").Personality.politeUnpolite),
             (roles, map) => TruthTable.empty
         ).intimate());
 
@@ -464,7 +465,7 @@ export class InteractionRepository{
                         ])
                     ),
                 new Phrase("Preguntada")
-                    .withAlternative(roles => "Perdone pero \"el negro ese\" tiene un nombre.")
+                    .withAlternative(roles => "[Preguntada]: Perdone pero \"el negro ese\" tiene un nombre.")
             ],
             Timing.GlobalSingle,
             (postconditions, roles, map) => 
@@ -475,7 +476,39 @@ export class InteractionRepository{
                 && roles.get("Preguntador").Aspect.sex === SexKind.Male
                 && roles.get("Preguntada").Name === "Socorro",
             (roles, map) => new TruthTable()
-                .with(Sentence.build("TeleCorazon"))
+                .with(Sentence.build("Racista", roles.get("Preguntador").Individual.name))
+        ).intimate());
+
+        this._elements.push(new Interaction(
+            "PreguntaRacista2",
+            "[Preguntador] hace pregunta racista y sexista",
+            new RolesDescriptor("Preguntador", [ "Preguntada"/*, "Oyente", "Oyenta"*/ ]),
+            [
+                new Phrase("Preguntador")
+                    .withAlternative(roles => "[Preguntador]: Si sigues con el negro seguro que tiene un buen mondongo."),
+                new Phrase("Preguntada")
+                    .withAlternative(roles => "[Preguntada] hace como que no ha oído la frase."),
+                /*new Phrase("Oyente")
+                    .withAlternative(roles => "[Oyente]: ¡jojojo!"),
+                new Phrase("Oyenta", "Preguntador")
+                    .withAlternative(roles => "[Oyenta]: Mira que llega a ser bruto [Preguntador]")*/
+            ],
+            Timing.GlobalSingle,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Preguntador")).name === "Salon"
+                && map.areInTheSameLocation(roles.get("Preguntador"), roles.get("Preguntada"))
+                /*&& map.areInTheSameLocation(roles.get("Preguntador"), roles.get("Oyente"))
+                && map.areInTheSameLocation(roles.get("Preguntador"), roles.get("Oyenta"))*/
+                && roles.get("Preguntador").Characteristics.is("Residente")
+                && !roles.get("Preguntador").Characteristics.is("Demente")
+                && roles.get("Preguntador").Aspect.sex === SexKind.Male
+                && roles.get("Preguntada").Name === "Socorro"
+                && postconditions.exists(Sentence.build("Racista", roles.get("Preguntador").Individual.name))
+                /*&& roles.get("Oyente").Characteristics.is("Residente")
+                && !roles.get("Oyente").Characteristics.is("Demente")
+                && roles.get("Oyente").Aspect.sex === SexKind.Male
+                && roles.get("Oyenta").Characteristics.is("Auxiliar")*/,
+            (roles, map) => TruthTable.empty
         ));
 
         /*this._elements.push(new Interaction(
