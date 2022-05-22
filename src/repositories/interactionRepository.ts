@@ -730,6 +730,56 @@ export class InteractionRepository{
             (roles, map) => TruthTable.empty
         ).intimate());
 
+        this._elements.push(new Interaction(
+            "Medicacion",
+            "[Medicador] da la medicación a [Medicado]",
+            new RolesDescriptor("Medicador", [ "Medicado" ]),
+            [
+                new Phrase("Medicador", "Medicado")
+                    .withAlternative(roles => "[Medicador] prepara el pastillero y un vasito de agua para [Medicado]."),
+                new Phrase("Medicador", "Medicado")
+                    .withAlternative(
+                        roles => roles.get("Medicado").Characteristics.is("Demente")
+                            ? "[Medicador]: venga, le abrimos la boquita y pa'dentro."
+                            : randomFromList([
+                                "[Medicador]: venga [Medicado], ya tienes preparadas tus chucherías de la mañana.",
+                                "[Medicador]: venga [Medicado], aquí tienes el vasito con los caramelitos matutinos.",
+                                "[Medicador]: venga [Medicado], todas de un trago. Que te vea yo.",
+                            ]),
+                        roles => roles.get("Medicado").Characteristics.is("Demente") 
+                            ? Effect.null() 
+                            : new Effect("Medicado", [ EffectComponent.negative(EffectKind.Happiness, EffectStrength.Medium) ])
+                    ),
+                new Phrase("Medicado")
+                    .withAlternative(
+                        roles => roles.get("Medicado").Characteristics.is("Demente") 
+                            ? "[Medicado] se traga las pastillas mecánicamente." 
+                            : "[Medicado] se traga las pastillas a disgusto.",
+                        roles => Effect.null(),
+                        roles => Sentence.build("Medicado", roles.get("Medicado").Individual.name)
+                    )
+                    .withAlternative(
+                        roles => roles.get("Medicado").Characteristics.is("Demente") 
+                            ? "[Medicado] se traga las pastillas mecánicamente." 
+                            : "[Medicado] finge tragarse las pastillas para escupirlas después.",
+                        roles => Effect.null(),
+                        roles => roles.get("Medicado").Characteristics.is("Demente") 
+                            ? Sentence.build("Medicado", roles.get("Medicado").Individual.name)
+                            : Sentence.build("MedicadoFake", roles.get("Medicado").Individual.name)
+                    )
+            ],
+            Timing.Single,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Medicador")).name === "Salon"
+                && map.areInTheSameLocation(roles.get("Medicador"), roles.get("Medicado"))
+                && roles.get("Medicador").Characteristics.is("Auxiliar")
+                && roles.get("Medicado").Characteristics.is("Residente")
+                && !postconditions.exists(Sentence.build("Medicado", roles.get("Medicado").Individual.name))
+                && !postconditions.exists(Sentence.build("MedicadoFake", roles.get("Medicado").Individual.name))
+                && postconditions.exists(Sentence.build("Saludo", roles.get("Medicador").Individual.name, roles.get("Medicado").Individual.name, true)),
+            (roles, map) => TruthTable.empty
+        ).intimate());
+
         /*this._elements.push(new Interaction(
             "PresentacionInteraction",
             "Presentar [Presentado] a [Oyente]",

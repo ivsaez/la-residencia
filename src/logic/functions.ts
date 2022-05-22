@@ -15,6 +15,8 @@ export class Functions{
         new Function("Impedido", Cardinality.One),
         new Function("Demente", Cardinality.One),
         new Function("Racista", Cardinality.One),
+        new Function("Medicado", Cardinality.One),
+        new Function("MedicadoFake", Cardinality.One),
         new Function("Saludo", Cardinality.Two),
     ];
 
