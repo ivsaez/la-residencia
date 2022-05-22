@@ -15,7 +15,7 @@ const START = "Comenzar";
 function App() {
 
   const [ count, setCount ] = useState(0);
-  const [ output, setOutput ] = useState([ "--LA RESIDENCIA--" ] as string[]);
+  const [ output, setOutput ] = useState([ "--LA RESIDENCIA (2012)--" ] as string[]);
 
   const [ world, setWorld ] = useState(null as World);
   const [ choices, setChoices ] = useState([ START ] as string[])
@@ -87,7 +87,7 @@ function App() {
       new Agents(agents.all),
       interactions.all,
       new FinishingConditions()
-          .with(scenario => scenario.turn === 100));
+          .with(scenario => scenario.turn === 300));
     
     let newWorld = new World();
     newWorld.add(residenceScenario);
@@ -144,10 +144,10 @@ function App() {
 
   function show(texts: string[]): void{
     if(texts.length === 1 && texts[0] === ScenarioEndNoInteractions){
-      output.push("No quedan más interacciones.");
+      output.push("--FIN--");
     }
     else if(texts.length === 1 && texts[0] === ScenarioEndAllConditionsMet){
-      output.push("Se han cumplido todas las condiciones.");
+      output.push("--FIN--");
     }
     else{
       for(let text of texts){

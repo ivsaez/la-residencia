@@ -593,7 +593,7 @@ export class InteractionRepository{
                     .withAlternative(roles => randomFromList([
                         "[Comentador]: No hay manera de que esta mujer se centre un poco.",
                         "[Comentador]: Qué vida más movida llevan algunas.",
-                        "[Comentador]: Siempre está igual ésta. Cuando no es con uno es con otro",
+                        "[Comentador]: Siempre está igual ésta. Cuando no es con uno es con otro.",
                         "[Comentador]: A saber de dónde saca tanto dinero esta tipa."
                     ])),
             ],
@@ -697,6 +697,38 @@ export class InteractionRepository{
             (roles, map) => new TruthTable()
                 .with(Sentence.build("TelePolitica"))
         ));
+
+        this._elements.push(new Interaction(
+            "CaeAlgo",
+            "A [Caedor] se le cae algo",
+            new RolesDescriptor("Caedor", [ "Recogedor" ]),
+            [
+                new Phrase("Caedor", "Recogedor")
+                    .withAlternative(roles => randomFromList([
+                        "[Caedor] tira disimuladamente un pañuelo al suelo cuando [Recogedor] pasa por su lado.",
+                        "[Caedor] tira fingiendo un despiste su reloj de bolsillo al suelo cuando [Recogedor] pasa por su lado."
+                    ])),
+                new Phrase("Recogedor", "Caedor")
+                    .withAlternative(
+                        roles => "[Recogedor] se agacha justo delante de [Caedor] y se lo devuelve.",
+                        roles => new Effect("Caedor", [
+                            EffectComponent.positive(EffectKind.Sex, EffectStrength.Medium),
+                            EffectComponent.positive(EffectKind.Happiness, EffectStrength.Low)
+                        ])),
+                new Phrase("Caedor", "Recogedor")
+                    .withAlternative(roles => "[Caedor]: muchas gracias guapísima.")
+            ],
+            Timing.Single,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Caedor")).name === "Salon"
+                && map.areInTheSameLocation(roles.get("Caedor"), roles.get("Recogedor"))
+                && roles.get("Recogedor").Characteristics.is("Auxiliar")
+                && roles.get("Caedor").Characteristics.is("Residente")
+                && !roles.get("Caedor").Characteristics.is("Demente")
+                && roles.get("Caedor").Aspect.sex === SexKind.Male
+                && postconditions.exists(Sentence.build("Saludo", roles.get("Caedor").Individual.name, roles.get("Recogedor").Individual.name, true)),
+            (roles, map) => TruthTable.empty
+        ).intimate());
 
         /*this._elements.push(new Interaction(
             "PresentacionInteraction",
