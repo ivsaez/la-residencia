@@ -18,19 +18,19 @@ export class InteractionRepository{
         this._elements = [];
 
         this._elements.push(new Interaction(
-            "SubirPersiana",
-            "Subir la persiana",
+            "SubirPersianas",
+            "Subir la persianas",
             new RolesDescriptor("Subidor"),
             [
                 new Phrase("Subidor")
-                    .withAlternative(roles => "[Subidor] sube la persiana de una de las ventanas del salón.")
+                    .withAlternative(roles => "[Subidor] sube las persianas de las ventanas del salón.")
             ],
-            Timing.Single,
+            Timing.GlobalSingle,
             (postconditions, roles, map) => 
                 map.getUbication(roles.get("Subidor")).name === "Salon" 
                 && roles.get("Subidor").Characteristics.is("Auxiliar"),
             (roles, map) => new TruthTable()
-                .with(Sentence.build("Luz"))
+                .with(Sentence.build("Penumbra"))
         ));
 
         this._elements.push(new Interaction(
@@ -39,12 +39,13 @@ export class InteractionRepository{
             new RolesDescriptor("Corredor"),
             [
                 new Phrase("Corredor")
-                    .withAlternative(roles => "[Corredor] corre las cortinas de una de las ventanas del salón.")
+                    .withAlternative(roles => "[Corredor] corre las cortinas de las ventanas del salón.")
             ],
             Timing.Single,
             (postconditions, roles, map) => 
                 map.getUbication(roles.get("Corredor")).name === "Salon" 
-                && roles.get("Corredor").Characteristics.is("Auxiliar"),
+                && roles.get("Corredor").Characteristics.is("Auxiliar")
+                && postconditions.exists(Sentence.build("Penumbra")),
             (roles, map) => new TruthTable()
                 .with(Sentence.build("Luz"))
         ));
@@ -284,6 +285,7 @@ export class InteractionRepository{
             Timing.Repeteable,
             (postconditions, roles, map) =>
                 roles.get("Fumador").Happiness.isUnhappy
+                && roles.get("Fumador").Characteristics.is("Auxiliar")
                 && map.getUbication(roles.get("Fumador")).name === "Terraza",
             (roles, map) => 
             {
@@ -405,6 +407,7 @@ export class InteractionRepository{
             (postconditions, roles, map) => 
                 map.getUbication(roles.get("Hija")).name === "Salon"
                 && map.areInTheSameLocation(roles.get("Hija"), roles.get("Padre"))
+                && check(roles.get("Hija").Personality.pesimisticOptimistic)
                 && roles.get("Hija").Relations.get(roles.get("Padre").Name).familiarity === Familiar.Parent,
             (roles, map) => TruthTable.empty
         ));
@@ -449,6 +452,9 @@ export class InteractionRepository{
             (postconditions, roles, map) => 
                 map.getUbication(roles.get("Encendedor")).name === "Salon"
                 && roles.get("Encendedor").Characteristics.is("Auxiliar")
+                && postconditions.exists(Sentence.build("Luz"))
+                && postconditions.exists(Sentence.build("Balcon"))
+                && postconditions.exists(Sentence.build("Lavabo"))
                 && !postconditions.exists(Sentence.build("Tele")),
             (roles, map) => new TruthTable()
                 .with(Sentence.build("TeleCorazon"))
@@ -491,27 +497,17 @@ export class InteractionRepository{
                 new Phrase("Preguntador")
                     .withAlternative(roles => "[Preguntador]: Si sigues con el negro seguro que tiene un buen mondongo."),
                 new Phrase("Preguntada")
-                    .withAlternative(roles => "[Preguntada] hace como que no ha oído la frase."),
-                /*new Phrase("Oyente")
-                    .withAlternative(roles => "[Oyente]: ¡jojojo!"),
-                new Phrase("Oyenta", "Preguntador")
-                    .withAlternative(roles => "[Oyenta]: Mira que llega a ser bruto [Preguntador]")*/
+                    .withAlternative(roles => "[Preguntada] hace como que no ha oído la frase.")
             ],
             Timing.GlobalSingle,
             (postconditions, roles, map) => 
                 map.getUbication(roles.get("Preguntador")).name === "Salon"
                 && map.areInTheSameLocation(roles.get("Preguntador"), roles.get("Preguntada"))
-                /*&& map.areInTheSameLocation(roles.get("Preguntador"), roles.get("Oyente"))
-                && map.areInTheSameLocation(roles.get("Preguntador"), roles.get("Oyenta"))*/
                 && roles.get("Preguntador").Characteristics.is("Residente")
                 && !roles.get("Preguntador").Characteristics.is("Demente")
                 && roles.get("Preguntador").Aspect.sex === SexKind.Male
                 && roles.get("Preguntada").Name === "Socorro"
-                && postconditions.exists(Sentence.build("Racista", roles.get("Preguntador").Individual.name))
-                /*&& roles.get("Oyente").Characteristics.is("Residente")
-                && !roles.get("Oyente").Characteristics.is("Demente")
-                && roles.get("Oyente").Aspect.sex === SexKind.Male
-                && roles.get("Oyenta").Characteristics.is("Auxiliar")*/,
+                && postconditions.exists(Sentence.build("Racista", roles.get("Preguntador").Individual.name)),
             (roles, map) => TruthTable.empty
         ));
 
@@ -597,7 +593,7 @@ export class InteractionRepository{
                         "[Comentador]: A saber de dónde saca tanto dinero esta tipa."
                     ])),
             ],
-            Timing.Repeteable,
+            Timing.Single,
             (postconditions, roles, map) => 
                 map.getUbication(roles.get("Comentador")).name === "Salon"
                 && roles.get("Comentador").Aspect.sex === SexKind.Female
@@ -616,7 +612,9 @@ export class InteractionRepository{
                 new Phrase("Pedidor")
                     .withAlternative(roles => "[Pedidor]: Nena, ¿por qué no cambias la tele a otra cosa?"),
                 new Phrase("Cambiador")
-                    .withAlternative(roles => "[Cambiador]: Como usted mande reina.")
+                    .withAlternative(roles => "[Cambiador]: Como usted mande reina."),
+                new Phrase("Pedidor")
+                    .withAlternative(roles => "En la tele dan \"Estudio estadio\".")
             ],
             Timing.GlobalSingle,
             (postconditions, roles, map) => 
@@ -683,7 +681,9 @@ export class InteractionRepository{
                 new Phrase("Pedidor")
                     .withAlternative(roles => "[Pedidor]: Nena, esto me aburre. Pon otra cosa anda."),
                 new Phrase("Cambiador")
-                    .withAlternative(roles => "[Cambiador]: Como usted prefiera doña Jacinta.")
+                    .withAlternative(roles => "[Cambiador]: Como usted prefiera doña Jacinta."),
+                new Phrase("Pedidor")
+                    .withAlternative(roles => "En la tele ahora dan el telediario.")
             ],
             Timing.GlobalSingle,
             (postconditions, roles, map) => 
@@ -740,11 +740,11 @@ export class InteractionRepository{
                 new Phrase("Medicador", "Medicado")
                     .withAlternative(
                         roles => roles.get("Medicado").Characteristics.is("Demente")
-                            ? "[Medicador]: venga, le abrimos la boquita y pa'dentro."
+                            ? "[Medicador]: Venga, le abrimos la boquita y pa'dentro."
                             : randomFromList([
-                                "[Medicador]: venga [Medicado], ya tienes preparadas tus chucherías de la mañana.",
-                                "[Medicador]: venga [Medicado], aquí tienes el vasito con los caramelitos matutinos.",
-                                "[Medicador]: venga [Medicado], todas de un trago. Que te vea yo.",
+                                "[Medicador]: Venga [Medicado], ya tienes preparadas tus chucherías de la mañana.",
+                                "[Medicador]: Venga [Medicado], aquí tienes el vasito con los caramelitos matutinos.",
+                                "[Medicador]: Venga [Medicado], todas de un trago. Que te vea yo.",
                             ]),
                         roles => roles.get("Medicado").Characteristics.is("Demente") 
                             ? Effect.null() 
@@ -774,6 +774,10 @@ export class InteractionRepository{
                 && map.areInTheSameLocation(roles.get("Medicador"), roles.get("Medicado"))
                 && roles.get("Medicador").Characteristics.is("Auxiliar")
                 && roles.get("Medicado").Characteristics.is("Residente")
+                && postconditions.exists(Sentence.build("Luz"))
+                && postconditions.exists(Sentence.build("Balcon"))
+                && postconditions.exists(Sentence.build("Lavabo"))
+                && !postconditions.exists(Sentence.build("Tele"))
                 && !postconditions.exists(Sentence.build("Medicado", roles.get("Medicado").Individual.name))
                 && !postconditions.exists(Sentence.build("MedicadoFake", roles.get("Medicado").Individual.name))
                 && postconditions.exists(Sentence.build("Saludo", roles.get("Medicador").Individual.name, roles.get("Medicado").Individual.name, true)),
@@ -826,7 +830,7 @@ export class InteractionRepository{
                     .withAlternative(roles => "[Mostrador]: Bueno bueno, a ver que se puede hacer. ¿Tiene usted por ahí 20 eurillos?"),
                 new Phrase("Salido", "Mostrador")
                     .withAlternative(
-                        roles => "[Salido] se saca un billete de 20 de la camisa y se lo da a [Mostrador] que lo guard rápidamente en su bolsillo.",
+                        roles => "[Salido] se saca un billete de 20 de la camisa y se lo da a [Mostrador] que lo guarda rápidamente en su bolsillo.",
                         roles => new Effect("Mostrador", [ EffectComponent.positive(EffectKind.Happiness, EffectStrength.High) ])
                     ),
                 new Phrase("Mostrador", "Salido")
@@ -869,7 +873,7 @@ export class InteractionRepository{
                     .withAlternative(roles => "[Salido]: Es que no me queda ya nada para este mes. ¿Podrías hacerle el gusto a este pobre viejo?"),
                 new Phrase("Mostrador", "Salido")
                     .withAlternative(
-                        roles => "[Mostrador]: Me temo que no don [Salido]. Habrá que esperar a que su familia le de su pro´ximo aguinaldo.",
+                        roles => "[Mostrador]: Me temo que no don [Salido]. Habrá que esperar a que su familia le de su próximo aguinaldo.",
                         roles => new Effect("Salido", [ 
                             EffectComponent.negative(EffectKind.Happiness, EffectStrength.Medium) 
                         ])
@@ -914,6 +918,125 @@ export class InteractionRepository{
                 return TruthTable.empty;
             }
         ));
+
+        this._elements.push(new Interaction(
+            "IrBalconResidente",
+            "[Salidor] sale al balcón",
+            new RolesDescriptor("Salidor"),
+            [
+                new Phrase("Salidor")
+                    .withAlternative(roles => "[Salidor] se levanta y se va andando pesadamente al balcón.")
+            ],
+            Timing.Repeteable,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Salidor")).name === "Salon"
+                && roles.get("Salidor").Characteristics.is("Residente")
+                && roles.get("Salidor").Characteristics.is("Fumador")
+                && postconditions.exists(Sentence.build("Balcon"))
+                && map.getLocation("Terraza").agents.length === 1
+                && !postconditions.exists(Sentence.build("Pobre", roles.get("Salidor").Individual.name)),
+            (roles, map) => {
+                map.move(roles.get("Salidor"), map.getLocation("Terraza"));
+                return TruthTable.empty;
+            }
+        ));
+
+        this._elements.push(new Interaction(
+            "FumarEstrangis",
+            "[Fumador] pide a [Otro] que le deje fumar",
+            new RolesDescriptor("Fumador", [ "Otro" ]),
+            [
+                new Phrase("Fumador", "Otro")
+                    .withAlternative(roles => "[Fumador]: Oye [Otro] bonita, se que no debería pero, ¿podrías dejarme darle una caladita a uno de esos cigarros?"),
+                new Phrase("Otro", "Fumador")
+                    .withAlternative(roles => "[Otro]: A su edad don [Fumador]..."),
+                new Phrase("Fumador", "Otro")
+                    .withAlternative(roles => "[Fumador]: ¿Qué otro gusto me puedo dar ya a estas alturas?. Una caladita no me va a matar mujer."),
+                new Phrase("Otro", "Fumador")
+                    .withAlternative(roles => "[Otro]: Bueno bueno, piense que el tabaco va muy caro hoy en día. ¿Tiene usted por ahí 5 eurillos?"),
+                new Phrase("Fumador", "Otro")
+                    .withAlternative(
+                        roles => "[Fumador] saca un billete de 5 del bolsillo y se lo da a [Otro] que lo mete cuidadosamente en un bolsillo de la bata.",
+                        roles => new Effect("Otro", [ EffectComponent.positive(EffectKind.Happiness, EffectStrength.Medium) ])
+                    ),
+                new Phrase("Otro", "Fumador")
+                    .withAlternative(
+                        roles => "[Otro] le acerca un pitillo encendido a [Fumador], que aspira como si le fuera la vida en ello. Después tose grotescamente hasta casi la arcada.",
+                        roles => new Effect("Fumador", [ EffectComponent.positive(EffectKind.Happiness, EffectStrength.High) ])
+                    ),
+            ],
+            Timing.Single,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Fumador")).name === "Terraza"
+                && map.areInTheSameLocation(roles.get("Fumador"), roles.get("Otro"))
+                && roles.get("Otro").Characteristics.is("Auxiliar")
+                && roles.get("Fumador").Characteristics.is("Residente")
+                && roles.get("Fumador").Characteristics.is("Fumador")
+                && !postconditions.exists(Sentence.build("Pobre", roles.get("Fumador").Individual.name)),
+            (roles, map) => new TruthTable()
+                .with(Sentence.build("Pobre", roles.get("Fumador").Individual.name))
+        ).intimate());
+
+        this._elements.push(new Interaction(
+            "FumarEstrangisFallido",
+            "[Fumador] pide a [Otro] que le deje fumar",
+            new RolesDescriptor("Fumador", [ "Otro" ]),
+            [
+                new Phrase("Fumador", "Otro")
+                    .withAlternative(roles => "[Fumador]: Oye [Otro] bonita, se que no debería pero, ¿podrías dejarme darle una caladita a uno de esos cigarros?"),
+                new Phrase("Otro", "Fumador")
+                    .withAlternative(roles => "[Otro]: A su edad don [Fumador]..."),
+                new Phrase("Fumador", "Otro")
+                    .withAlternative(roles => "[Fumador]: ¿Qué otro gusto me puedo dar ya a estas alturas?. Una caladita no me va a matar mujer."),
+                new Phrase("Otro", "Fumador")
+                    .withAlternative(roles => "[Otro]: Bueno bueno, piense que el tabaco va muy caro hoy en día. ¿Tiene usted por ahí 5 eurillos?"),
+                new Phrase("Fumador", "Otro")
+                    .withAlternative(roles => "[Fumador]: Es que no me queda ya nada para este mes. ¿No podrías dejarme ni siquiera una caladita?"),
+                new Phrase("Otro", "Fumador")
+                    .withAlternative(
+                        roles => "[Otro]: No va a poder ser don [Fumador]. Habrá que esperar a que su familia le de algo más de dinerillo.",
+                        roles => new Effect("Fumador", [ 
+                            EffectComponent.negative(EffectKind.Happiness, EffectStrength.Medium) 
+                        ])
+                    ),
+            ],
+            Timing.Single,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Fumador")).name === "Terraza"
+                && map.areInTheSameLocation(roles.get("Fumador"), roles.get("Otro"))
+                && roles.get("Otro").Characteristics.is("Auxiliar")
+                && roles.get("Fumador").Characteristics.is("Residente")
+                && roles.get("Fumador").Characteristics.is("Fumador")
+                && postconditions.exists(Sentence.build("Pobre", roles.get("Fumador").Individual.name)),
+            (roles, map) => TruthTable.empty
+        ).intimate());
+
+        this._elements.push(new Interaction(
+            "VolverBalconResidente",
+            "[Salidor] vuelve del balcón",
+            new RolesDescriptor("Salidor"),
+            [
+                new Phrase("Salidor")
+                    .withAlternative(roles => "[Salidor] entra de nuevo en el salón y se deja caer sobre una butaca.")
+            ],
+            Timing.Repeteable,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Salidor")).name === "Terraza"
+                && roles.get("Salidor").Characteristics.is("Residente")
+                && !roles.get("Salidor").Characteristics.is("Demente")
+                && !roles.get("Salidor").Characteristics.is("Impedido")
+                && map.getLocation("Terraza").agents.length === 1
+                && postconditions.exists(Sentence.build("Pobre", roles.get("Salidor").Individual.name)),
+            (roles, map) => {
+                map.move(roles.get("Salidor"), map.getLocation("Salon"));
+                return TruthTable.empty;
+            }
+        ));
+
+
+        // -----------------------------------------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------------------------------------------------------------
 
         /*this._elements.push(new Interaction(
             "PresentacionInteraction",
