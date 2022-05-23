@@ -780,6 +780,35 @@ export class InteractionRepository{
             (roles, map) => TruthTable.empty
         ).intimate());
 
+        this._elements.push(new Interaction(
+            "IrLavabo",
+            "[Meador] pide a [Portador] que le ayude a ir al lavabo",
+            new RolesDescriptor("Meador", [ "Portador" ]),
+            [
+                new Phrase("Meador", "Portador")
+                    .withAlternative(roles => "[Meador]: Perdona [Portador], creo que tengo una urgencia. ¿Podrías ayudarme a ir al lavabo?"),
+                new Phrase("Portador", "Meador")
+                    .withAlternative(roles => "[Portador]: Faltaría más don [Meador], vamos ahora mismo."),
+                new Phrase("Meador", "Portador")
+                    .withAlternative(roles => "[Meador] se mete en el lavabo con la ayuda de [Portador].")
+            ],
+            Timing.Single,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Meador")).name === "Salon"
+                && map.areInTheSameLocation(roles.get("Meador"), roles.get("Portador"))
+                && roles.get("Portador").Characteristics.is("Auxiliar")
+                && roles.get("Meador").Characteristics.is("Residente")
+                && !roles.get("Meador").Characteristics.is("Demente")
+                && roles.get("Meador").Aspect.sex === SexKind.Male
+                && map.getLocation("Lavabo").agents.length === 0
+                && postconditions.exists(Sentence.build("Saludo", roles.get("Meador").Individual.name, roles.get("Portador").Individual.name, true)),
+            (roles, map) => {
+                map.move(roles.get("Meador"), map.getLocation("Lavabo"));
+                map.move(roles.get("Portador"), map.getLocation("Lavabo"));
+                return TruthTable.empty;
+            }
+        ));
+
         /*this._elements.push(new Interaction(
             "PresentacionInteraction",
             "Presentar [Presentado] a [Oyente]",
