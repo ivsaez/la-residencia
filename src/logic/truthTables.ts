@@ -13,7 +13,9 @@ export class Tables{
             .with(Sentence.build("Residente", "Antonio"))
             .with(Sentence.build("Impedido", "Fructuoso"))
             .with(Sentence.build("Impedido", "Jacinta"))
-            .with(Sentence.build("Demente", "Antonio"))],
+            .with(Sentence.build("Demente", "Antonio"))
+            .with(Sentence.build("Fumador", "Anselmo"))
+            .with(Sentence.build("Salido", "Fructuoso"))],
         ["Fructuoso", new TruthTable()
             .with(Sentence.build("Republicano", "Anselmo"))
             .with(Sentence.build("Nacional", "Fructuoso"))
@@ -25,7 +27,9 @@ export class Tables{
             .with(Sentence.build("Residente", "Antonio"))
             .with(Sentence.build("Impedido", "Fructuoso"))
             .with(Sentence.build("Impedido", "Jacinta"))
-            .with(Sentence.build("Demente", "Antonio"))],
+            .with(Sentence.build("Demente", "Antonio"))
+            .with(Sentence.build("Fumador", "Anselmo"))
+            .with(Sentence.build("Salido", "Fructuoso"))],
         ["Jacinta", new TruthTable()
             .with(Sentence.build("Republicano", "Anselmo"))
             .with(Sentence.build("Nacional", "Fructuoso"))
@@ -37,7 +41,9 @@ export class Tables{
             .with(Sentence.build("Residente", "Antonio"))
             .with(Sentence.build("Impedido", "Fructuoso"))
             .with(Sentence.build("Impedido", "Jacinta"))
-            .with(Sentence.build("Demente", "Antonio"))],
+            .with(Sentence.build("Demente", "Antonio"))
+            .with(Sentence.build("Fumador", "Anselmo"))
+            .with(Sentence.build("Salido", "Fructuoso"))],
         ["Raquel", new TruthTable()
             .with(Sentence.build("Republicano", "Anselmo"))
             .with(Sentence.build("Nacional", "Fructuoso"))
@@ -49,7 +55,9 @@ export class Tables{
             .with(Sentence.build("Residente", "Antonio"))
             .with(Sentence.build("Impedido", "Fructuoso"))
             .with(Sentence.build("Impedido", "Jacinta"))
-            .with(Sentence.build("Demente", "Antonio"))],
+            .with(Sentence.build("Demente", "Antonio"))
+            .with(Sentence.build("Fumador", "Anselmo"))
+            .with(Sentence.build("Salido", "Fructuoso"))],
         ["Maria", new TruthTable()
             .with(Sentence.build("Republicano", "Anselmo"))
             .with(Sentence.build("Nacional", "Fructuoso"))
@@ -61,7 +69,9 @@ export class Tables{
             .with(Sentence.build("Residente", "Antonio"))
             .with(Sentence.build("Impedido", "Fructuoso"))
             .with(Sentence.build("Impedido", "Jacinta"))
-            .with(Sentence.build("Demente", "Antonio"))],
+            .with(Sentence.build("Demente", "Antonio"))
+            .with(Sentence.build("Fumador", "Anselmo"))
+            .with(Sentence.build("Salido", "Fructuoso"))],
         ["Antonio", new TruthTable()
             .with(Sentence.build("Republicano", "Anselmo"))
             .with(Sentence.build("Nacional", "Fructuoso"))
@@ -73,7 +83,9 @@ export class Tables{
             .with(Sentence.build("Residente", "Antonio"))
             .with(Sentence.build("Impedido", "Fructuoso"))
             .with(Sentence.build("Impedido", "Jacinta"))
-            .with(Sentence.build("Demente", "Antonio"))],
+            .with(Sentence.build("Demente", "Antonio"))
+            .with(Sentence.build("Fumador", "Anselmo"))
+            .with(Sentence.build("Salido", "Fructuoso"))],
         ["Socorro", new TruthTable()
             .with(Sentence.build("Auxiliar", "Raquel"))
             .with(Sentence.build("Auxiliar", "Maria"))
@@ -83,7 +95,9 @@ export class Tables{
             .with(Sentence.build("Residente", "Antonio"))
             .with(Sentence.build("Impedido", "Fructuoso"))
             .with(Sentence.build("Impedido", "Jacinta"))
-            .with(Sentence.build("Demente", "Antonio"))],
+            .with(Sentence.build("Demente", "Antonio"))
+            .with(Sentence.build("Fumador", "Anselmo"))
+            .with(Sentence.build("Salido", "Fructuoso"))],
     ]);
     
     static tableFrom(actorName: string): TruthTable{

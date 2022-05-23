@@ -22,7 +22,7 @@ export class AgentRepository{
             new Happiness(0),
             new Personality(60, 40, 50, 50, 60),
             Likes.likesSpecieAndSex(SpecieKind.Human, SexKind.Female),
-            [ "Republicano", "Residente" ],
+            [ "Republicano", "Residente", "Fumador" ],
             false
         ));
 
@@ -39,7 +39,7 @@ export class AgentRepository{
             new Happiness(),
             new Personality(70, 60, 80, 70, 70),
             Likes.likesSpecieAndSex(SpecieKind.Human, SexKind.Female),
-            [ "Nacional", "Residente", "Impedido" ],
+            [ "Nacional", "Residente", "Impedido", "Salido" ],
             false
         ));
 
