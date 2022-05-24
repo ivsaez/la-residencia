@@ -21,6 +21,7 @@ export class Functions{
         new Function("Fumador", Cardinality.One),
         new Function("Salido", Cardinality.One),
         new Function("Pobre", Cardinality.One),
+        new Function("Descansado", Cardinality.One),
         new Function("Saludo", Cardinality.Two),
     ];
 

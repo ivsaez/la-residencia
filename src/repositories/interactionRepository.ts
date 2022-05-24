@@ -1092,6 +1092,56 @@ export class InteractionRepository{
             }
         ));
 
+        this._elements.push(new Interaction(
+            "ResidenteDuerme",
+            "[Dormidor] se duerme",
+            new RolesDescriptor("Dormidor"),
+            [
+                new Phrase("Dormidor")
+                    .withAlternative(roles => roles.get("Dormidor").Aspect.sex === SexKind.Male 
+                        ? "[Dormidor] se queda dormido."
+                        : "[Dormidor] se queda dormida."
+                    )
+            ],
+            Timing.Repeteable,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Dormidor")).name === "Salon"
+                && roles.get("Dormidor").Characteristics.is("Residente")
+                && roles.get("Dormidor").IsActive
+                && postconditions.exists(Sentence.build("Medicado", roles.get("Dormidor").Individual.name))
+                && !postconditions.exists(Sentence.build("Dormidor", roles.get("Dormidor").Individual.name)),
+            (roles, map) => {
+                roles.get("Dormidor").deactivate();
+                return TruthTable.empty;
+            }
+        ));
+
+        this._elements.push(new Interaction(
+            "ResidenteDespierta",
+            "[Dormidor] se despierta",
+            new RolesDescriptor("Dormidor"),
+            [
+                new Phrase("Dormidor")
+                    .withAlternative(roles => roles.get("Dormidor").Aspect.sex === SexKind.Male 
+                        ? randomFromList([
+                            "[Dormidor] se despierta sobresaltado, mirando alrededor.",
+                            "[Dormidor] se despierta taciturno."
+                         ])
+                        : "[Dormidor] se despierta tranquilamente."
+                    )
+            ],
+            Timing.Repeteable,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Dormidor")).name === "Salon"
+                && roles.get("Dormidor").Characteristics.is("Residente")
+                && !roles.get("Dormidor").IsActive,
+            (roles, map) => {
+                roles.get("Dormidor").activate();
+                return new TruthTable()
+                    .with(Sentence.build("Descansado", roles.get("Dormidor").Individual.name));
+            }
+        ));
+
 
         // -----------------------------------------------------------------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------------------------------------
