@@ -1173,6 +1173,151 @@ export class InteractionRepository{
             }
         ));
 
+        this._elements.push(new Interaction(
+            "ComentarioPoliticoFavorableIzquierdas",
+            "[Comentador] comenta noticia sobre política favorable a la izquierda",
+            new RolesDescriptor("Comentador", [ "Contrario" ]),
+            [
+                new Phrase("Comentador")
+                    .withAlternative(roles => `En la tele sale una notícia sobre ${randomFromList([ "el PSOE", "IU" ])}.`),
+                new Phrase("Comentador")
+                    .withAlternative(roles => randomFromList([
+                        "[Comentador]: La izquierda siempre le ha venido bien a este país.",
+                        "[Comentador]: Cuando gobierna la izquierda las cosas se hacen bien.",
+                        "[Comentador]: Como siempre la izquierda defendiéndonos a todos de los explotadores de siempre."
+                    ])),
+                new Phrase("Contrario", "Comentador")
+                    .withAlternative(
+                        roles => "[Contrario]: si hubieran ganado la guerra ahora seríamos como Cuba.",
+                        roles => new Effect("Comentador", [
+                            EffectComponent.negative(EffectKind.Happiness, EffectStrength.High),
+                            EffectComponent.negative(EffectKind.Friend, EffectStrength.High)
+                        ])
+                    )
+            ],
+            Timing.Single,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Comentador")).name === "Salon"
+                && map.areInTheSameLocation(roles.get("Comentador"), roles.get("Contrario"))
+                && roles.get("Comentador").Characteristics.is("Residente")
+                && !roles.get("Comentador").Characteristics.is("Demente")
+                && roles.get("Comentador").Characteristics.is("Residente")
+                && !roles.get("Contrario").Characteristics.is("Demente")
+                && roles.get("Comentador").Characteristics.is("Republicano")
+                && roles.get("Contrario").Characteristics.is("Nacional")
+                && roles.get("Comentador").IsActive
+                && roles.get("Contrario").IsActive
+                && postconditions.exists(Sentence.build("TelePolitica")),
+            (roles, map) => TruthTable.empty
+        ));
+
+        this._elements.push(new Interaction(
+            "ComentarioPoliticoFavorableDerechas",
+            "[Comentador] comenta noticia sobre política favorable a la derecha",
+            new RolesDescriptor("Comentador", [ "Contrario" ]),
+            [
+                new Phrase("Comentador")
+                    .withAlternative(roles => `En la tele sale una notícia sobre ${randomFromList([ "el PP", "Ciudadanos" ])}.`),
+                new Phrase("Comentador")
+                    .withAlternative(roles => randomFromList([
+                        "[Comentador]: Menos mal que la derecha siempre pone orden.",
+                        "[Comentador]: Con la derecha la economía siempre va bien.",
+                        "[Comentador]: Cuando gobierna la derecha hay trabajo para todo el mundo, menos para los vagos."
+                    ])),
+                new Phrase("Contrario", "Comentador")
+                    .withAlternative(
+                        roles => "[Contrario]: si no hubieran ganado la guerra ahora seríamos como Inglaterra o Francia.",
+                        roles => new Effect("Comentador", [
+                            EffectComponent.negative(EffectKind.Happiness, EffectStrength.High),
+                            EffectComponent.negative(EffectKind.Friend, EffectStrength.High)
+                        ])
+                    )
+            ],
+            Timing.Single,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Comentador")).name === "Salon"
+                && map.areInTheSameLocation(roles.get("Comentador"), roles.get("Contrario"))
+                && roles.get("Comentador").Characteristics.is("Residente")
+                && !roles.get("Comentador").Characteristics.is("Demente")
+                && roles.get("Comentador").Characteristics.is("Residente")
+                && !roles.get("Contrario").Characteristics.is("Demente")
+                && roles.get("Comentador").Characteristics.is("Nacional")
+                && roles.get("Contrario").Characteristics.is("Republicano")
+                && roles.get("Comentador").IsActive
+                && roles.get("Contrario").IsActive
+                && postconditions.exists(Sentence.build("TelePolitica")),
+            (roles, map) => TruthTable.empty
+        ));
+
+        this._elements.push(new Interaction(
+            "ComentarioPoliticoChanchulloDerechas",
+            "[Comentador] comenta noticia sobre política desfavorable a la derecha",
+            new RolesDescriptor("Comentador", [ "Contrario" ]),
+            [
+                new Phrase("Comentador")
+                    .withAlternative(roles => `En la tele sale una notícia sobre un escándalo ${randomFromList([ "del PP", "de Ciudadanos" ])}.`),
+                new Phrase("Comentador", "Contrario")
+                    .withAlternative(
+                        roles => randomFromList([
+                            "[Comentador]: Ahí lo tienes [Contrario], los descendientes de Franco haciendo de las suyas.",
+                            "[Comentador]: Ahí van los tuyos [Contrario], más que un partido son una banda criminal."
+                        ]),
+                        roles => new Effect("Contrario", [
+                            EffectComponent.negative(EffectKind.Happiness, EffectStrength.High),
+                            EffectComponent.negative(EffectKind.Friend, EffectStrength.High)
+                        ])
+                    )
+            ],
+            Timing.Single,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Comentador")).name === "Salon"
+                && map.areInTheSameLocation(roles.get("Comentador"), roles.get("Contrario"))
+                && roles.get("Comentador").Characteristics.is("Residente")
+                && !roles.get("Comentador").Characteristics.is("Demente")
+                && roles.get("Comentador").Characteristics.is("Residente")
+                && !roles.get("Contrario").Characteristics.is("Demente")
+                && roles.get("Comentador").Characteristics.is("Republicano")
+                && roles.get("Contrario").Characteristics.is("Nacional")
+                && roles.get("Comentador").IsActive
+                && roles.get("Contrario").IsActive
+                && postconditions.exists(Sentence.build("TelePolitica")),
+            (roles, map) => TruthTable.empty
+        ));
+
+        this._elements.push(new Interaction(
+            "ComentarioPoliticoChanchulloIzquierdas",
+            "[Comentador] comenta noticia sobre política desfavorable a la izquierda",
+            new RolesDescriptor("Comentador", [ "Contrario" ]),
+            [
+                new Phrase("Comentador")
+                    .withAlternative(roles => `En la tele sale una notícia sobre un chanchullo ${randomFromList([ "del PSOE", "de IU" ])}.`),
+                new Phrase("Comentador", "Contrario")
+                    .withAlternative(
+                        roles => randomFromList([
+                            "[Comentador]: Ahí lo tienes [Contrario], los comunistas siempre amasando el dinero ajeno.",
+                            "[Comentador]: Ahí van los tuyos [Contrario], fusilados tendrían que acabar todos esos."
+                        ]),
+                        roles => new Effect("Contrario", [
+                            EffectComponent.negative(EffectKind.Happiness, EffectStrength.High),
+                            EffectComponent.negative(EffectKind.Friend, EffectStrength.High)
+                        ])
+                    )
+            ],
+            Timing.Single,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Comentador")).name === "Salon"
+                && map.areInTheSameLocation(roles.get("Comentador"), roles.get("Contrario"))
+                && roles.get("Comentador").Characteristics.is("Residente")
+                && !roles.get("Comentador").Characteristics.is("Demente")
+                && roles.get("Comentador").Characteristics.is("Residente")
+                && !roles.get("Contrario").Characteristics.is("Demente")
+                && roles.get("Comentador").Characteristics.is("Nacional")
+                && roles.get("Contrario").Characteristics.is("Republicano")
+                && roles.get("Comentador").IsActive
+                && roles.get("Contrario").IsActive
+                && postconditions.exists(Sentence.build("TelePolitica")),
+            (roles, map) => TruthTable.empty
+        ));
 
         // -----------------------------------------------------------------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------------------------------------
