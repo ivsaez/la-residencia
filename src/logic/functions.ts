@@ -22,6 +22,7 @@ export class Functions{
         new Function("Salido", Cardinality.One),
         new Function("Pobre", Cardinality.One),
         new Function("Descansado", Cardinality.One),
+        new Function("Cagado", Cardinality.One),
         new Function("Saludo", Cardinality.Two),
     ];
 

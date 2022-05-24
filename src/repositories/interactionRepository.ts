@@ -944,6 +944,37 @@ export class InteractionRepository{
         ).intimate());
 
         this._elements.push(new Interaction(
+            "Cagar",
+            "[Caganer] caga",
+            new RolesDescriptor("Caganer", [ "Otro" ]),
+            [
+                new Phrase("Caganer")
+                    .withAlternative(roles => "[Caganer] hace de vientre entre estridentes flatulencias."),
+                new Phrase("Caganer", "Otro")
+                    .withAlternative(
+                        roles => "[Caganer]: ¡Se me esta resistiendo el condenado!",
+                        roles => new Effect("Otro", [ EffectComponent.negative(EffectKind.Happiness, EffectStrength.Low) ])
+                    ),
+                new Phrase("Otro", "Caganer")
+                    .withAlternative(roles => "[Otro]: Hay que comer más fibra don [Caganer].")
+            ],
+            Timing.Single,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Caganer")).name === "Lavabo"
+                && map.areInTheSameLocation(roles.get("Caganer"), roles.get("Otro"))
+                && roles.get("Otro").Characteristics.is("Auxiliar")
+                && roles.get("Caganer").Characteristics.is("Residente")
+                && !roles.get("Caganer").Characteristics.is("Demente")
+                && roles.get("Caganer").Characteristics.is("Impedido")
+                && roles.get("Caganer").Aspect.sex === SexKind.Male
+                && roles.get("Otro").IsActive
+                && roles.get("Caganer").IsActive
+                && !postconditions.exists(Sentence.build("Cagado", roles.get("Caganer").Individual.name)),
+            (roles, map) => new TruthTable()
+                .with(Sentence.build("Cagado", roles.get("Caganer").Individual.name))
+        ).intimate());
+
+        this._elements.push(new Interaction(
             "VolverLavabo",
             "[Meador] y [Portador] vuelven del lavabo",
             new RolesDescriptor("Meador", [ "Portador" ]),
@@ -1109,7 +1140,7 @@ export class InteractionRepository{
                 && roles.get("Dormidor").Characteristics.is("Residente")
                 && roles.get("Dormidor").IsActive
                 && postconditions.exists(Sentence.build("Medicado", roles.get("Dormidor").Individual.name))
-                && !postconditions.exists(Sentence.build("Dormidor", roles.get("Dormidor").Individual.name)),
+                && !postconditions.exists(Sentence.build("Descansado", roles.get("Dormidor").Individual.name)),
             (roles, map) => {
                 roles.get("Dormidor").deactivate();
                 return TruthTable.empty;
