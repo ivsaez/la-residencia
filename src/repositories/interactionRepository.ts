@@ -1188,7 +1188,7 @@ export class InteractionRepository{
                     ])),
                 new Phrase("Contrario", "Comentador")
                     .withAlternative(
-                        roles => "[Contrario]: si hubieran ganado la guerra ahora seríamos como Cuba.",
+                        roles => "[Contrario]: Si hubieran ganado la guerra ahora seríamos como Cuba.",
                         roles => new Effect("Comentador", [
                             EffectComponent.negative(EffectKind.Happiness, EffectStrength.High),
                             EffectComponent.negative(EffectKind.Friend, EffectStrength.High)
@@ -1226,7 +1226,7 @@ export class InteractionRepository{
                     ])),
                 new Phrase("Contrario", "Comentador")
                     .withAlternative(
-                        roles => "[Contrario]: si no hubieran ganado la guerra ahora seríamos como Inglaterra o Francia.",
+                        roles => "[Contrario]: Si no hubieran ganado la guerra ahora seríamos como Inglaterra o Francia.",
                         roles => new Effect("Comentador", [
                             EffectComponent.negative(EffectKind.Happiness, EffectStrength.High),
                             EffectComponent.negative(EffectKind.Friend, EffectStrength.High)
@@ -1318,6 +1318,99 @@ export class InteractionRepository{
                 && postconditions.exists(Sentence.build("TelePolitica")),
             (roles, map) => TruthTable.empty
         ));
+
+        this._elements.push(new Interaction(
+            "CriticarDerecha",
+            "[Criticador] critica a la derecha",
+            new RolesDescriptor("Criticador", [ "Favorable", "Contrario" ]),
+            [
+                new Phrase("Criticador")
+                    .withAlternative(roles => "En la tele aparece un miembro del PP cualquiera."),
+                new Phrase("Criticador")
+                    .withAlternative(
+                        roles => randomFromList([
+                            "[Criticador]: Menudo careto tiene el Aznar, menos mal que el bigote le tapa media jeta.",
+                            "[Criticador]: Menudo atontao el Rajoy, pa lo único que vale es para cobrar sobres.",
+                            "[Criticador]: Lo más ilegal del PP es el bronzeado de Zaplana.",
+                            "[Criticador]: Si Esperanza Aguirre se mordiera la lengua moriría envenenada.",
+                            "[Criticador]: ¡Franco tenía el culo blanco!",
+                            "[Criticador]: ¡Carrero Blanco campeón de salto!",
+                            "[Criticador]: Mario Conde era el más espavilado de estos...",
+
+                        ])),
+                new Phrase("Favorable", "Contrario")
+                    .withAlternative(
+                        roles => "[Favorable]: Jajajaja, ¡putos fachas!",
+                        roles => new Effect("Contrario", [
+                            EffectComponent.negative(EffectKind.Happiness, EffectStrength.High),
+                            EffectComponent.negative(EffectKind.Friend, EffectStrength.High)
+                        ])
+                    )
+            ],
+            Timing.Repeteable,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Criticador")).name === "Salon"
+                && map.areInTheSameLocation(roles.get("Criticador"), roles.get("Favorable"))
+                && map.areInTheSameLocation(roles.get("Criticador"), roles.get("Contrario"))
+                && roles.get("Criticador").Name === "Jacinta"
+                && roles.get("Favorable").Characteristics.is("Residente")
+                && !roles.get("Favorable").Characteristics.is("Demente")
+                && roles.get("Contrario").Characteristics.is("Residente")
+                && !roles.get("Contrario").Characteristics.is("Demente")
+                && roles.get("Favorable").Characteristics.is("Republicano")
+                && roles.get("Contrario").Characteristics.is("Nacional")
+                && roles.get("Criticador").IsActive
+                && roles.get("Favorable").IsActive
+                && roles.get("Contrario").IsActive
+                && postconditions.exists(Sentence.build("TelePolitica")),
+            (roles, map) => TruthTable.empty
+        ).intimate());
+
+        this._elements.push(new Interaction(
+            "CriticarIzquierda",
+            "[Criticador] critica a la izquierda",
+            new RolesDescriptor("Criticador", [ "Favorable", "Contrario" ]),
+            [
+                new Phrase("Criticador")
+                    .withAlternative(roles => "En la tele aparece un miembro del PSOE cualquiera."),
+                new Phrase("Criticador")
+                    .withAlternative(
+                        roles => randomFromList([
+                            "[Criticador]: Vaya mamón el ZParo, hunde el país y ni se inmuta.",
+                            "[Criticador]: Rubalcaba es más feo que un coche por abajo.",
+                            "[Criticador]: Ahí va Felipe González \"El químico\", sabe usar como nadie la cal viva.",
+                            "[Criticador]: Menudo falso el Solana, un día se besaba con uno y al día siguiente lo bombardeaba.",
+                            "[Criticador]: El Che que tanto les gusta a estos les habría fusilado a todos.",
+                            "[Criticador]: A estos si les llevas la contraria te mandan al Gulag.",
+                            "[Criticador]: Viendo lo tontos que son entiendes porqué perdieron la guerra."
+                        ])),
+                new Phrase("Favorable", "Contrario")
+                    .withAlternative(
+                        roles => "[Favorable]: Jajajaja, ¡putos rojos!",
+                        roles => new Effect("Contrario", [
+                            EffectComponent.negative(EffectKind.Happiness, EffectStrength.High),
+                            EffectComponent.negative(EffectKind.Friend, EffectStrength.High)
+                        ])
+                    )
+            ],
+            Timing.Repeteable,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Criticador")).name === "Salon"
+                && map.areInTheSameLocation(roles.get("Criticador"), roles.get("Favorable"))
+                && map.areInTheSameLocation(roles.get("Criticador"), roles.get("Contrario"))
+                && roles.get("Criticador").Name === "Jacinta"
+                && roles.get("Favorable").Characteristics.is("Residente")
+                && !roles.get("Favorable").Characteristics.is("Demente")
+                && roles.get("Contrario").Characteristics.is("Residente")
+                && !roles.get("Contrario").Characteristics.is("Demente")
+                && roles.get("Favorable").Characteristics.is("Nacional")
+                && roles.get("Contrario").Characteristics.is("Republicano")
+                && roles.get("Criticador").IsActive
+                && roles.get("Favorable").IsActive
+                && roles.get("Contrario").IsActive
+                && postconditions.exists(Sentence.build("TelePolitica")),
+            (roles, map) => TruthTable.empty
+        ).intimate());
 
         // -----------------------------------------------------------------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------------------------------------------------------------
