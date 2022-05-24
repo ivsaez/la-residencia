@@ -28,6 +28,7 @@ export class InteractionRepository{
             Timing.GlobalSingle,
             (postconditions, roles, map) => 
                 map.getUbication(roles.get("Subidor")).name === "Salon" 
+                && roles.get("Subidor").IsActive
                 && roles.get("Subidor").Characteristics.is("Auxiliar"),
             (roles, map) => new TruthTable()
                 .with(Sentence.build("Penumbra"))
@@ -44,6 +45,7 @@ export class InteractionRepository{
             Timing.Single,
             (postconditions, roles, map) => 
                 map.getUbication(roles.get("Corredor")).name === "Salon" 
+                && roles.get("Corredor").IsActive
                 && roles.get("Corredor").Characteristics.is("Auxiliar")
                 && postconditions.exists(Sentence.build("Penumbra")),
             (roles, map) => new TruthTable()
@@ -63,6 +65,7 @@ export class InteractionRepository{
             Timing.Single,
             (postconditions, roles, map) => 
                 map.getUbication(roles.get("Trabajador")).name === "Limbo"
+                && roles.get("Trabajador").IsActive
                 && roles.get("Trabajador").Characteristics.is("Auxiliar"),
             (roles, map) => {
                 map.move(roles.get("Trabajador"), map.getLocation("Salon"));
@@ -85,6 +88,7 @@ export class InteractionRepository{
             (postconditions, roles, map) => 
                 map.getUbication(roles.get("Bajador")).name === "Limbo"
                 && postconditions.exists(Sentence.build("Luz"))
+                && roles.get("Bajador").IsActive
                 && roles.get("Bajador").Characteristics.is("Residente")
                 && !roles.get("Bajador").Characteristics.is("Impedido")
                 && !roles.get("Bajador").Characteristics.is("Demente"),
@@ -109,6 +113,7 @@ export class InteractionRepository{
             (postconditions, roles, map) => 
                 map.getUbication(roles.get("Bajador")).name === "Limbo"
                 && postconditions.exists(Sentence.build("Luz"))
+                && roles.get("Bajador").IsActive
                 && roles.get("Bajador").Characteristics.is("Residente")
                 && roles.get("Bajador").Characteristics.is("Impedido")
                 && !roles.get("Bajador").Characteristics.is("Demente"),
@@ -119,7 +124,7 @@ export class InteractionRepository{
         ));
 
         this._elements.push(new Interaction(
-            "BuecarDemente",
+            "BuscarDemente",
             "Ir a buscar al residente demente",
             new RolesDescriptor("Buscador", [ "Demente" ]),
             [
@@ -133,6 +138,7 @@ export class InteractionRepository{
                 map.getUbication(roles.get("Buscador")).name === "Salon"
                 && map.getUbication(roles.get("Demente")).name === "Limbo"
                 && postconditions.exists(Sentence.build("Luz"))
+                && roles.get("Buscador").IsActive
                 && roles.get("Buscador").Characteristics.is("Auxiliar")
                 && roles.get("Demente").Characteristics.is("Residente")
                 && roles.get("Demente").Characteristics.is("Demente"),
@@ -162,6 +168,8 @@ export class InteractionRepository{
                 && roles.get("Saludador").Characteristics.is("Residente")
                 && !roles.get("Saludador").Characteristics.is("Demente")
                 && !roles.get("Saludado").Characteristics.is("Demente")
+                && roles.get("Saludado").IsActive
+                && roles.get("Saludador").IsActive
                 && !postconditions.exists(Sentence.build("Saludo", roles.get("Saludador").Individual.name, roles.get("Saludado").Individual.name, true)),
             (roles, map) => new TruthTable()
                 .with(Sentence.build("Saludo", roles.get("Saludador").Individual.name, roles.get("Saludado").Individual.name, true))
@@ -187,6 +195,8 @@ export class InteractionRepository{
                 && roles.get("Saludado").Characteristics.is("Residente")
                 && !roles.get("Saludador").Characteristics.is("Demente")
                 && !roles.get("Saludado").Characteristics.is("Demente")
+                && roles.get("Saludado").IsActive
+                && roles.get("Saludador").IsActive
                 && !postconditions.exists(Sentence.build("Saludo", roles.get("Saludador").Individual.name, roles.get("Saludado").Individual.name, true)),
             (roles, map) => new TruthTable()
                 .with(Sentence.build("Saludo", roles.get("Saludador").Individual.name, roles.get("Saludado").Individual.name, true))
@@ -204,6 +214,7 @@ export class InteractionRepository{
             (postconditions, roles, map) => 
                 map.getUbication(roles.get("Sentador")).name === "Salon" 
                 && postconditions.exists(Sentence.build("Luz"))
+                && roles.get("Sentador").IsActive
                 && roles.get("Sentador").Characteristics.is("Residente")
                 && !roles.get("Sentador").Characteristics.is("Impedido")
                 && !roles.get("Sentador").Characteristics.is("Demente"),
@@ -221,6 +232,7 @@ export class InteractionRepository{
             Timing.Single,
             (postconditions, roles, map) => 
                 !postconditions.exists(Sentence.build("Lavabo"))
+                && roles.get("Abridor").IsActive
                 && map.getUbication(roles.get("Abridor")).name === "Salon" 
                 && map.getLocation("Salon").agents.length >= 4
                 && postconditions.exists(Sentence.build("Luz"))
@@ -240,6 +252,7 @@ export class InteractionRepository{
             Timing.Single,
             (postconditions, roles, map) => 
                 !postconditions.exists(Sentence.build("Balcon"))
+                && roles.get("Abridor").IsActive
                 && map.getUbication(roles.get("Abridor")).name === "Salon" 
                 && map.getLocation("Salon").agents.length >= 4
                 && postconditions.exists(Sentence.build("Luz"))
@@ -259,6 +272,7 @@ export class InteractionRepository{
             Timing.Repeteable,
             (postconditions, roles, map) =>
                 map.getLocation("Terraza").agents.length === 0
+                && roles.get("Desplazado").IsActive
                 && roles.get("Desplazado").Happiness.isUnhappy
                 && postconditions.exists(Sentence.build("Balcon"))
                 && roles.get("Desplazado").Characteristics.is("Auxiliar")
@@ -285,6 +299,7 @@ export class InteractionRepository{
             Timing.Repeteable,
             (postconditions, roles, map) =>
                 roles.get("Fumador").Happiness.isUnhappy
+                && roles.get("Fumador").IsActive
                 && roles.get("Fumador").Characteristics.is("Auxiliar")
                 && map.getUbication(roles.get("Fumador")).name === "Terraza",
             (roles, map) => 
@@ -305,6 +320,7 @@ export class InteractionRepository{
             Timing.Repeteable,
             (postconditions, roles, map) =>
                 map.getUbication(roles.get("Desplazado")).name === "Terraza"
+                && roles.get("Desplazado").IsActive
                 && !roles.get("Desplazado").Happiness.isUnhappy
                 && map.getUbication(roles.get("Desplazado")).isConnected(map.getLocation("Salon")),
             (roles, map) => 
@@ -331,6 +347,8 @@ export class InteractionRepository{
                 && postconditions.exists(Sentence.build("Luz"))
                 && roles.get("Llegador").Name === "Socorro"
                 && roles.get("Visitado").Name === "Antonio"
+                && roles.get("Llegador").IsActive
+                && roles.get("Visitado").IsActive
                 && map.getUbication(roles.get("Llegador")).isConnected(map.getLocation("Salon")),
             (roles, map) => 
             {
@@ -359,6 +377,9 @@ export class InteractionRepository{
                 && roles.get("Saludado1").Characteristics.is("Auxiliar")
                 && roles.get("Saludado2").Characteristics.is("Auxiliar")
                 && roles.get("Saludador").Name === "Socorro"
+                && roles.get("Saludado1").IsActive
+                && roles.get("Saludado2").IsActive
+                && roles.get("Saludador").IsActive
                 && !postconditions.exists(Sentence.build("Saludo", roles.get("Saludador").Individual.name, roles.get("Saludado1").Individual.name, true))
                 && !postconditions.exists(Sentence.build("Saludo", roles.get("Saludador").Individual.name, roles.get("Saludado2").Individual.name, true)),
             (roles, map) => new TruthTable()
@@ -386,6 +407,8 @@ export class InteractionRepository{
                 && map.areInTheSameLocation(roles.get("Saludador"), roles.get("Saludado"))
                 && roles.get("Saludador").Characteristics.is("Nacional")
                 && roles.get("Saludado").Name === "Socorro"
+                && roles.get("Saludador").IsActive
+                && roles.get("Saludado").IsActive
                 && !postconditions.exists(Sentence.build("Saludo", roles.get("Saludador").Individual.name, roles.get("Saludado").Individual.name, true)),
             (roles, map) => new TruthTable()
                 .with(Sentence.build("Saludo", roles.get("Saludador").Individual.name, roles.get("Saludado").Individual.name, true))
@@ -408,6 +431,7 @@ export class InteractionRepository{
                 map.getUbication(roles.get("Hija")).name === "Salon"
                 && map.areInTheSameLocation(roles.get("Hija"), roles.get("Padre"))
                 && check(roles.get("Hija").Personality.pesimisticOptimistic)
+                && roles.get("Hija").IsActive
                 && roles.get("Hija").Relations.get(roles.get("Padre").Name).familiarity === Familiar.Parent,
             (roles, map) => TruthTable.empty
         ));
@@ -433,6 +457,8 @@ export class InteractionRepository{
                 && map.areInTheSameLocation(roles.get("Tosedor"), roles.get("Escuchador"))
                 && roles.get("Tosedor").Characteristics.is("Residente")
                 && roles.get("Escuchador").Characteristics.is("Auxiliar")
+                && roles.get("Tosedor").IsActive
+                && roles.get("Escuchador").IsActive
                 && postconditions.exists(Sentence.build("Saludo", roles.get("Tosedor").Individual.name, roles.get("Escuchador").Individual.name, true))
                 && check(100 - roles.get("Tosedor").Personality.politeUnpolite),
             (roles, map) => TruthTable.empty
@@ -452,6 +478,7 @@ export class InteractionRepository{
             (postconditions, roles, map) => 
                 map.getUbication(roles.get("Encendedor")).name === "Salon"
                 && roles.get("Encendedor").Characteristics.is("Auxiliar")
+                && roles.get("Encendedor").IsActive
                 && postconditions.exists(Sentence.build("Luz"))
                 && postconditions.exists(Sentence.build("Balcon"))
                 && postconditions.exists(Sentence.build("Lavabo"))
@@ -484,6 +511,8 @@ export class InteractionRepository{
                 && !roles.get("Preguntador").Characteristics.is("Demente")
                 && roles.get("Preguntador").Aspect.sex === SexKind.Male
                 && roles.get("Preguntada").Name === "Socorro"
+                && roles.get("Preguntador").IsActive
+                && roles.get("Preguntada").IsActive
                 && postconditions.exists(Sentence.build("Saludo", roles.get("Preguntador").Individual.name, roles.get("Preguntada").Individual.name, true)),
             (roles, map) => new TruthTable()
                 .with(Sentence.build("Racista", roles.get("Preguntador").Individual.name))
@@ -507,6 +536,8 @@ export class InteractionRepository{
                 && !roles.get("Preguntador").Characteristics.is("Demente")
                 && roles.get("Preguntador").Aspect.sex === SexKind.Male
                 && roles.get("Preguntada").Name === "Socorro"
+                && roles.get("Preguntador").IsActive
+                && roles.get("Preguntada").IsActive
                 && postconditions.exists(Sentence.build("Racista", roles.get("Preguntador").Individual.name)),
             (roles, map) => TruthTable.empty
         ));
@@ -535,6 +566,8 @@ export class InteractionRepository{
                 && map.areInTheSameLocation(roles.get("Preguntador"), roles.get("Preguntada"))
                 && roles.get("Preguntador").Characteristics.is("Auxiliar")
                 && roles.get("Preguntada").Name === "Socorro"
+                && roles.get("Preguntador").IsActive
+                && roles.get("Preguntada").IsActive
                 && postconditions.exists(Sentence.build("Saludo", roles.get("Preguntador").Individual.name, roles.get("Preguntada").Individual.name, true)),
             (roles, map) => TruthTable.empty
         ).intimate());
@@ -563,6 +596,8 @@ export class InteractionRepository{
                 && map.areInTheSameLocation(roles.get("Preguntador"), roles.get("Preguntada"))
                 && roles.get("Preguntador").Characteristics.is("Auxiliar")
                 && roles.get("Preguntada").Name === "Socorro"
+                && roles.get("Preguntador").IsActive
+                && roles.get("Preguntada").IsActive
                 && postconditions.exists(Sentence.build("Saludo", roles.get("Preguntador").Individual.name, roles.get("Preguntada").Individual.name, true)),
             (roles, map) => TruthTable.empty
         ).intimate());
@@ -598,6 +633,7 @@ export class InteractionRepository{
                 map.getUbication(roles.get("Comentador")).name === "Salon"
                 && roles.get("Comentador").Aspect.sex === SexKind.Female
                 && roles.get("Comentador").IsHuman === false
+                && roles.get("Comentador").IsActive
                 && postconditions.exists(Sentence.build("TeleCorazon"))
                 && !postconditions.exists(Sentence.build("TeleDeportes"))
                 && !postconditions.exists(Sentence.build("TelePolitica")),
@@ -622,6 +658,8 @@ export class InteractionRepository{
                 && map.areInTheSameLocation(roles.get("Pedidor"), roles.get("Cambiador"))
                 && roles.get("Cambiador").Characteristics.is("Auxiliar")
                 && roles.get("Pedidor").Name === "Jacinta"
+                && roles.get("Cambiador").IsActive
+                && roles.get("Pedidor").IsActive
                 && postconditions.exists(Sentence.build("TeleCorazon"))
                 && !postconditions.exists(Sentence.build("TeleDeportes"))
                 && !postconditions.exists(Sentence.build("TelePolitica"))
@@ -667,6 +705,7 @@ export class InteractionRepository{
                 map.getUbication(roles.get("Comentador")).name === "Salon"
                 && !roles.get("Comentador").Characteristics.is("Demente")
                 && roles.get("Comentador").IsHuman === false
+                && roles.get("Comentador").IsActive
                 && (roles.get("Comentador").Characteristics.is("Auxiliar") || roles.get("Comentador").Characteristics.is("Residente"))
                 && postconditions.exists(Sentence.build("TeleDeportes"))
                 && !postconditions.exists(Sentence.build("TelePolitica")),
@@ -691,6 +730,8 @@ export class InteractionRepository{
                 && map.areInTheSameLocation(roles.get("Pedidor"), roles.get("Cambiador"))
                 && roles.get("Cambiador").Characteristics.is("Auxiliar")
                 && roles.get("Pedidor").Name === "Jacinta"
+                && roles.get("Cambiador").IsActive
+                && roles.get("Pedidor").IsActive
                 && postconditions.exists(Sentence.build("TeleDeportes"))
                 && !postconditions.exists(Sentence.build("TelePolitica"))
                 && postconditions.exists(Sentence.build("Saludo", roles.get("Pedidor").Individual.name, roles.get("Cambiador").Individual.name, true)),
@@ -726,6 +767,8 @@ export class InteractionRepository{
                 && roles.get("Caedor").Characteristics.is("Residente")
                 && !roles.get("Caedor").Characteristics.is("Demente")
                 && roles.get("Caedor").Aspect.sex === SexKind.Male
+                && roles.get("Recogedor").IsActive
+                && roles.get("Caedor").IsActive
                 && postconditions.exists(Sentence.build("Saludo", roles.get("Caedor").Individual.name, roles.get("Recogedor").Individual.name, true)),
             (roles, map) => TruthTable.empty
         ).intimate());
@@ -774,6 +817,8 @@ export class InteractionRepository{
                 && map.areInTheSameLocation(roles.get("Medicador"), roles.get("Medicado"))
                 && roles.get("Medicador").Characteristics.is("Auxiliar")
                 && roles.get("Medicado").Characteristics.is("Residente")
+                && roles.get("Medicador").IsActive
+                && roles.get("Medicado").IsActive
                 && postconditions.exists(Sentence.build("Luz"))
                 && postconditions.exists(Sentence.build("Balcon"))
                 && postconditions.exists(Sentence.build("Lavabo"))
@@ -805,6 +850,8 @@ export class InteractionRepository{
                 && !roles.get("Meador").Characteristics.is("Demente")
                 && roles.get("Meador").Characteristics.is("Impedido")
                 && roles.get("Meador").Aspect.sex === SexKind.Male
+                && roles.get("Portador").IsActive
+                && roles.get("Meador").IsActive
                 && map.getLocation("Lavabo").agents.length === 0
                 && postconditions.exists(Sentence.build("Lavabo"))
                 && postconditions.exists(Sentence.build("Saludo", roles.get("Meador").Individual.name, roles.get("Portador").Individual.name, true)),
@@ -851,6 +898,8 @@ export class InteractionRepository{
                 && !roles.get("Salido").Characteristics.is("Demente")
                 && roles.get("Salido").Characteristics.is("Impedido")
                 && roles.get("Salido").Aspect.sex === SexKind.Male
+                && roles.get("Mostrador").IsActive
+                && roles.get("Salido").IsActive
                 && !postconditions.exists(Sentence.build("Pobre", roles.get("Salido").Individual.name)),
             (roles, map) => new TruthTable()
                 .with(Sentence.build("Pobre", roles.get("Salido").Individual.name))
@@ -888,6 +937,8 @@ export class InteractionRepository{
                 && !roles.get("Salido").Characteristics.is("Demente")
                 && roles.get("Salido").Characteristics.is("Impedido")
                 && roles.get("Salido").Aspect.sex === SexKind.Male
+                && roles.get("Mostrador").IsActive
+                && roles.get("Salido").IsActive
                 && postconditions.exists(Sentence.build("Pobre", roles.get("Salido").Individual.name)),
             (roles, map) => TruthTable.empty
         ).intimate());
@@ -909,6 +960,8 @@ export class InteractionRepository{
                 && !roles.get("Meador").Characteristics.is("Demente")
                 && roles.get("Meador").Characteristics.is("Impedido")
                 && roles.get("Meador").Aspect.sex === SexKind.Male
+                && roles.get("Portador").IsActive
+                && roles.get("Meador").IsActive
                 && postconditions.exists(Sentence.build("Lavabo"))
                 && map.getLocation("Lavabo").agents.length === 2
                 && postconditions.exists(Sentence.build("Pobre", roles.get("Meador").Individual.name)),
@@ -933,6 +986,7 @@ export class InteractionRepository{
                 && roles.get("Salidor").Characteristics.is("Residente")
                 && roles.get("Salidor").Characteristics.is("Fumador")
                 && postconditions.exists(Sentence.build("Balcon"))
+                && roles.get("Salidor").IsActive
                 && map.getLocation("Terraza").agents.length === 1
                 && !postconditions.exists(Sentence.build("Pobre", roles.get("Salidor").Individual.name)),
             (roles, map) => {
@@ -972,6 +1026,8 @@ export class InteractionRepository{
                 && roles.get("Otro").Characteristics.is("Auxiliar")
                 && roles.get("Fumador").Characteristics.is("Residente")
                 && roles.get("Fumador").Characteristics.is("Fumador")
+                && roles.get("Otro").IsActive
+                && roles.get("Fumador").IsActive
                 && !postconditions.exists(Sentence.build("Pobre", roles.get("Fumador").Individual.name)),
             (roles, map) => new TruthTable()
                 .with(Sentence.build("Pobre", roles.get("Fumador").Individual.name))
@@ -1007,6 +1063,8 @@ export class InteractionRepository{
                 && roles.get("Otro").Characteristics.is("Auxiliar")
                 && roles.get("Fumador").Characteristics.is("Residente")
                 && roles.get("Fumador").Characteristics.is("Fumador")
+                && roles.get("Otro").IsActive
+                && roles.get("Fumador").IsActive
                 && postconditions.exists(Sentence.build("Pobre", roles.get("Fumador").Individual.name)),
             (roles, map) => TruthTable.empty
         ).intimate());
@@ -1025,6 +1083,7 @@ export class InteractionRepository{
                 && roles.get("Salidor").Characteristics.is("Residente")
                 && !roles.get("Salidor").Characteristics.is("Demente")
                 && !roles.get("Salidor").Characteristics.is("Impedido")
+                && roles.get("Salidor").IsActive
                 && map.getLocation("Terraza").agents.length === 1
                 && postconditions.exists(Sentence.build("Pobre", roles.get("Salidor").Individual.name)),
             (roles, map) => {
