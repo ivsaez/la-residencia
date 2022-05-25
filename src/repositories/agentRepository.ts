@@ -13,7 +13,7 @@ export class AgentRepository{
             "Anselmo",
             new Aspect(SexKind.Male, OriginKind.European, EyeColor.Brown, HairColor.White, HaircutStyle.Short, ComplexionKind.Skinny, 173, 92),
             new RelationSet()
-                .append("Fructuoso", RelationFactory.get(RelationKind.Enemy))
+                .append("Fructuoso", RelationFactory.get(RelationKind.Neutral))
                 .append("Jacinta", RelationFactory.get(RelationKind.Friend))
                 .append("Raquel", RelationFactory.get(RelationKind.FuckFriend))
                 .append("Maria", RelationFactory.get(RelationKind.FuckFriend))
@@ -30,7 +30,7 @@ export class AgentRepository{
             "Fructuoso",
             new Aspect(SexKind.Male, OriginKind.European, EyeColor.Black, HairColor.White, HaircutStyle.Short, ComplexionKind.Fat, 168, 92),
             new RelationSet()
-                .append("Anselmo", RelationFactory.get(RelationKind.Enemy))
+                .append("Anselmo", RelationFactory.get(RelationKind.Neutral))
                 .append("Jacinta", RelationFactory.get(RelationKind.Friend))
                 .append("Raquel", RelationFactory.get(RelationKind.FuckFriend))
                 .append("Maria", RelationFactory.get(RelationKind.FuckFriend))
