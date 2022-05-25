@@ -9,6 +9,7 @@ export class Functions{
         new Function("TeleCorazon", Cardinality.None),
         new Function("TeleDeportes", Cardinality.None),
         new Function("TelePolitica", Cardinality.None),
+        new Function("TeleApagada", Cardinality.None),
         new Function("Republicano", Cardinality.One),
         new Function("Nacional", Cardinality.One),
         new Function("Auxiliar", Cardinality.One),

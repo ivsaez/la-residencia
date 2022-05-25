@@ -409,6 +409,7 @@ export class InteractionRepository{
                 && roles.get("Saludado").Name === "Socorro"
                 && roles.get("Saludador").IsActive
                 && roles.get("Saludado").IsActive
+                && !postconditions.exists(Sentence.build("Agresor", roles.get("Saludador").Individual.name))
                 && !postconditions.exists(Sentence.build("Saludo", roles.get("Saludador").Individual.name, roles.get("Saludado").Individual.name, true)),
             (roles, map) => new TruthTable()
                 .with(Sentence.build("Saludo", roles.get("Saludador").Individual.name, roles.get("Saludado").Individual.name, true))
@@ -459,6 +460,7 @@ export class InteractionRepository{
                 && roles.get("Escuchador").Characteristics.is("Auxiliar")
                 && roles.get("Tosedor").IsActive
                 && roles.get("Escuchador").IsActive
+                && !postconditions.exists(Sentence.build("Agresor", roles.get("Tosedor").Individual.name))
                 && postconditions.exists(Sentence.build("Saludo", roles.get("Tosedor").Individual.name, roles.get("Escuchador").Individual.name, true))
                 && check(100 - roles.get("Tosedor").Personality.politeUnpolite),
             (roles, map) => TruthTable.empty
@@ -513,6 +515,7 @@ export class InteractionRepository{
                 && roles.get("Preguntada").Name === "Socorro"
                 && roles.get("Preguntador").IsActive
                 && roles.get("Preguntada").IsActive
+                && !postconditions.exists(Sentence.build("Agresor", roles.get("Preguntador").Individual.name))
                 && postconditions.exists(Sentence.build("Saludo", roles.get("Preguntador").Individual.name, roles.get("Preguntada").Individual.name, true)),
             (roles, map) => new TruthTable()
                 .with(Sentence.build("Racista", roles.get("Preguntador").Individual.name))
@@ -538,6 +541,7 @@ export class InteractionRepository{
                 && roles.get("Preguntada").Name === "Socorro"
                 && roles.get("Preguntador").IsActive
                 && roles.get("Preguntada").IsActive
+                && !postconditions.exists(Sentence.build("Agresor", roles.get("Preguntador").Individual.name))
                 && postconditions.exists(Sentence.build("Racista", roles.get("Preguntador").Individual.name)),
             (roles, map) => TruthTable.empty
         ));
@@ -636,7 +640,8 @@ export class InteractionRepository{
                 && roles.get("Comentador").IsActive
                 && postconditions.exists(Sentence.build("TeleCorazon"))
                 && !postconditions.exists(Sentence.build("TeleDeportes"))
-                && !postconditions.exists(Sentence.build("TelePolitica")),
+                && !postconditions.exists(Sentence.build("TelePolitica"))
+                && !postconditions.exists(Sentence.build("TeleApagada")),
             (roles, map) => TruthTable.empty
         ));
 
@@ -663,6 +668,7 @@ export class InteractionRepository{
                 && postconditions.exists(Sentence.build("TeleCorazon"))
                 && !postconditions.exists(Sentence.build("TeleDeportes"))
                 && !postconditions.exists(Sentence.build("TelePolitica"))
+                && !postconditions.exists(Sentence.build("TeleApagada"))
                 && postconditions.exists(Sentence.build("Saludo", roles.get("Pedidor").Individual.name, roles.get("Cambiador").Individual.name, true)),
             (roles, map) => new TruthTable()
                 .with(Sentence.build("TeleDeportes"))
@@ -707,8 +713,10 @@ export class InteractionRepository{
                 && roles.get("Comentador").IsHuman === false
                 && roles.get("Comentador").IsActive
                 && (roles.get("Comentador").Characteristics.is("Auxiliar") || roles.get("Comentador").Characteristics.is("Residente"))
+                && !postconditions.exists(Sentence.build("Agresor", roles.get("Comentador").Individual.name))
                 && postconditions.exists(Sentence.build("TeleDeportes"))
-                && !postconditions.exists(Sentence.build("TelePolitica")),
+                && !postconditions.exists(Sentence.build("TelePolitica"))
+                && !postconditions.exists(Sentence.build("TeleApagada")),
             (roles, map) => TruthTable.empty
         ));
 
@@ -734,6 +742,7 @@ export class InteractionRepository{
                 && roles.get("Pedidor").IsActive
                 && postconditions.exists(Sentence.build("TeleDeportes"))
                 && !postconditions.exists(Sentence.build("TelePolitica"))
+                && !postconditions.exists(Sentence.build("TeleApagada"))
                 && postconditions.exists(Sentence.build("Saludo", roles.get("Pedidor").Individual.name, roles.get("Cambiador").Individual.name, true)),
             (roles, map) => new TruthTable()
                 .with(Sentence.build("TelePolitica"))
@@ -769,6 +778,7 @@ export class InteractionRepository{
                 && roles.get("Caedor").Aspect.sex === SexKind.Male
                 && roles.get("Recogedor").IsActive
                 && roles.get("Caedor").IsActive
+                && !postconditions.exists(Sentence.build("Agresor", roles.get("Caedor").Individual.name))
                 && postconditions.exists(Sentence.build("Saludo", roles.get("Caedor").Individual.name, roles.get("Recogedor").Individual.name, true)),
             (roles, map) => TruthTable.empty
         ).intimate());
@@ -822,7 +832,6 @@ export class InteractionRepository{
                 && postconditions.exists(Sentence.build("Luz"))
                 && postconditions.exists(Sentence.build("Balcon"))
                 && postconditions.exists(Sentence.build("Lavabo"))
-                && !postconditions.exists(Sentence.build("Tele"))
                 && !postconditions.exists(Sentence.build("Medicado", roles.get("Medicado").Individual.name))
                 && !postconditions.exists(Sentence.build("MedicadoFake", roles.get("Medicado").Individual.name))
                 && postconditions.exists(Sentence.build("Saludo", roles.get("Medicador").Individual.name, roles.get("Medicado").Individual.name, true)),
@@ -854,6 +863,7 @@ export class InteractionRepository{
                 && roles.get("Meador").IsActive
                 && map.getLocation("Lavabo").agents.length === 0
                 && postconditions.exists(Sentence.build("Lavabo"))
+                && !postconditions.exists(Sentence.build("Agresor", roles.get("Meador").Individual.name))
                 && postconditions.exists(Sentence.build("Saludo", roles.get("Meador").Individual.name, roles.get("Portador").Individual.name, true)),
             (roles, map) => {
                 map.move(roles.get("Meador"), map.getLocation("Lavabo"));
@@ -900,6 +910,7 @@ export class InteractionRepository{
                 && roles.get("Salido").Aspect.sex === SexKind.Male
                 && roles.get("Mostrador").IsActive
                 && roles.get("Salido").IsActive
+                && !postconditions.exists(Sentence.build("Agresor", roles.get("Salido").Individual.name))
                 && !postconditions.exists(Sentence.build("Pobre", roles.get("Salido").Individual.name)),
             (roles, map) => new TruthTable()
                 .with(Sentence.build("Pobre", roles.get("Salido").Individual.name))
@@ -939,6 +950,7 @@ export class InteractionRepository{
                 && roles.get("Salido").Aspect.sex === SexKind.Male
                 && roles.get("Mostrador").IsActive
                 && roles.get("Salido").IsActive
+                && !postconditions.exists(Sentence.build("Agresor", roles.get("Salido").Individual.name))
                 && postconditions.exists(Sentence.build("Pobre", roles.get("Salido").Individual.name)),
             (roles, map) => TruthTable.empty
         ).intimate());
@@ -969,6 +981,7 @@ export class InteractionRepository{
                 && roles.get("Caganer").Aspect.sex === SexKind.Male
                 && roles.get("Otro").IsActive
                 && roles.get("Caganer").IsActive
+                && !postconditions.exists(Sentence.build("Agresor", roles.get("Caganer").Individual.name))
                 && !postconditions.exists(Sentence.build("Cagado", roles.get("Caganer").Individual.name)),
             (roles, map) => new TruthTable()
                 .with(Sentence.build("Cagado", roles.get("Caganer").Individual.name))
@@ -1019,6 +1032,7 @@ export class InteractionRepository{
                 && postconditions.exists(Sentence.build("Balcon"))
                 && roles.get("Salidor").IsActive
                 && map.getLocation("Terraza").agents.length === 1
+                && !postconditions.exists(Sentence.build("Agresor", roles.get("Salidor").Individual.name))
                 && !postconditions.exists(Sentence.build("Pobre", roles.get("Salidor").Individual.name)),
             (roles, map) => {
                 map.move(roles.get("Salidor"), map.getLocation("Terraza"));
@@ -1059,6 +1073,7 @@ export class InteractionRepository{
                 && roles.get("Fumador").Characteristics.is("Fumador")
                 && roles.get("Otro").IsActive
                 && roles.get("Fumador").IsActive
+                && !postconditions.exists(Sentence.build("Agresor", roles.get("Fumador").Individual.name))
                 && !postconditions.exists(Sentence.build("Pobre", roles.get("Fumador").Individual.name)),
             (roles, map) => new TruthTable()
                 .with(Sentence.build("Pobre", roles.get("Fumador").Individual.name))
@@ -1096,6 +1111,7 @@ export class InteractionRepository{
                 && roles.get("Fumador").Characteristics.is("Fumador")
                 && roles.get("Otro").IsActive
                 && roles.get("Fumador").IsActive
+                && !postconditions.exists(Sentence.build("Agresor", roles.get("Fumador").Individual.name))
                 && postconditions.exists(Sentence.build("Pobre", roles.get("Fumador").Individual.name)),
             (roles, map) => TruthTable.empty
         ).intimate());
@@ -1207,7 +1223,9 @@ export class InteractionRepository{
                 && roles.get("Contrario").Characteristics.is("Nacional")
                 && roles.get("Comentador").IsActive
                 && roles.get("Contrario").IsActive
-                && postconditions.exists(Sentence.build("TelePolitica")),
+                && !postconditions.exists(Sentence.build("Agresor", roles.get("Comentador").Individual.name))
+                && postconditions.exists(Sentence.build("TelePolitica"))
+                && !postconditions.exists(Sentence.build("TeleApagada")),
             (roles, map) => TruthTable.empty
         ));
 
@@ -1245,7 +1263,9 @@ export class InteractionRepository{
                 && roles.get("Contrario").Characteristics.is("Republicano")
                 && roles.get("Comentador").IsActive
                 && roles.get("Contrario").IsActive
-                && postconditions.exists(Sentence.build("TelePolitica")),
+                && !postconditions.exists(Sentence.build("Agresor", roles.get("Comentador").Individual.name))
+                && postconditions.exists(Sentence.build("TelePolitica"))
+                && !postconditions.exists(Sentence.build("TeleApagada")),
             (roles, map) => TruthTable.empty
         ));
 
@@ -1280,7 +1300,9 @@ export class InteractionRepository{
                 && roles.get("Contrario").Characteristics.is("Nacional")
                 && roles.get("Comentador").IsActive
                 && roles.get("Contrario").IsActive
-                && postconditions.exists(Sentence.build("TelePolitica")),
+                && !postconditions.exists(Sentence.build("Agresor", roles.get("Comentador").Individual.name))
+                && postconditions.exists(Sentence.build("TelePolitica"))
+                && !postconditions.exists(Sentence.build("TeleApagada")),
             (roles, map) => TruthTable.empty
         ));
 
@@ -1315,7 +1337,9 @@ export class InteractionRepository{
                 && roles.get("Contrario").Characteristics.is("Republicano")
                 && roles.get("Comentador").IsActive
                 && roles.get("Contrario").IsActive
-                && postconditions.exists(Sentence.build("TelePolitica")),
+                && !postconditions.exists(Sentence.build("Agresor", roles.get("Comentador").Individual.name))
+                && postconditions.exists(Sentence.build("TelePolitica"))
+                && !postconditions.exists(Sentence.build("TeleApagada")),
             (roles, map) => TruthTable.empty
         ));
 
@@ -1362,7 +1386,8 @@ export class InteractionRepository{
                 && roles.get("Criticador").IsActive
                 && roles.get("Favorable").IsActive
                 && roles.get("Contrario").IsActive
-                && postconditions.exists(Sentence.build("TelePolitica")),
+                && postconditions.exists(Sentence.build("TelePolitica"))
+                && !postconditions.exists(Sentence.build("TeleApagada")),
             (roles, map) => TruthTable.empty
         ).intimate());
 
@@ -1408,7 +1433,8 @@ export class InteractionRepository{
                 && roles.get("Criticador").IsActive
                 && roles.get("Favorable").IsActive
                 && roles.get("Contrario").IsActive
-                && postconditions.exists(Sentence.build("TelePolitica")),
+                && postconditions.exists(Sentence.build("TelePolitica"))
+                && !postconditions.exists(Sentence.build("TeleApagada")),
             (roles, map) => TruthTable.empty
         ).intimate());
 
@@ -1450,9 +1476,12 @@ export class InteractionRepository{
                 && roles.get("Agresor").IsActive
                 && roles.get("Agredido").IsActive
                 && roles.get("Separador").IsActive
-                && postconditions.exists(Sentence.build("TelePolitica")),
+                && !postconditions.exists(Sentence.build("Agresor", roles.get("Agresor").Individual.name))
+                && postconditions.exists(Sentence.build("TelePolitica"))
+                && !postconditions.exists(Sentence.build("TeleApagada")),
             (roles, map) => new TruthTable()
                 .with(Sentence.build("Agresor", roles.get("Agresor").Individual.name))
+                .with(Sentence.build("TeleApagada"))
         ));
 
         // -----------------------------------------------------------------------------------------------------------------------------------------
