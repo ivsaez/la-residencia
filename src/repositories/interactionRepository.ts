@@ -1206,8 +1206,8 @@ export class InteractionRepository{
                     .withAlternative(
                         roles => "[Contrario]: Si hubieran ganado la guerra ahora seríamos como Cuba.",
                         roles => new Effect("Comentador", [
-                            EffectComponent.negative(EffectKind.Happiness, EffectStrength.High),
-                            EffectComponent.negative(EffectKind.Friend, EffectStrength.High)
+                            EffectComponent.negative(EffectKind.Happiness, EffectStrength.Medium),
+                            EffectComponent.negative(EffectKind.Friend, EffectStrength.Medium)
                         ])
                     )
             ],
@@ -1246,8 +1246,8 @@ export class InteractionRepository{
                     .withAlternative(
                         roles => "[Contrario]: Si no hubieran ganado la guerra ahora seríamos como Inglaterra o Francia.",
                         roles => new Effect("Comentador", [
-                            EffectComponent.negative(EffectKind.Happiness, EffectStrength.High),
-                            EffectComponent.negative(EffectKind.Friend, EffectStrength.High)
+                            EffectComponent.negative(EffectKind.Happiness, EffectStrength.Medium),
+                            EffectComponent.negative(EffectKind.Friend, EffectStrength.Medium)
                         ])
                     )
             ],
@@ -1283,8 +1283,8 @@ export class InteractionRepository{
                             "[Comentador]: Ahí van los tuyos [Contrario], más que un partido son una banda criminal."
                         ]),
                         roles => new Effect("Contrario", [
-                            EffectComponent.negative(EffectKind.Happiness, EffectStrength.High),
-                            EffectComponent.negative(EffectKind.Friend, EffectStrength.High)
+                            EffectComponent.negative(EffectKind.Happiness, EffectStrength.Medium),
+                            EffectComponent.negative(EffectKind.Friend, EffectStrength.Medium)
                         ])
                     )
             ],
@@ -1320,8 +1320,8 @@ export class InteractionRepository{
                             "[Comentador]: Ahí van los tuyos [Contrario], fusilados tendrían que acabar todos esos."
                         ]),
                         roles => new Effect("Contrario", [
-                            EffectComponent.negative(EffectKind.Happiness, EffectStrength.High),
-                            EffectComponent.negative(EffectKind.Friend, EffectStrength.High)
+                            EffectComponent.negative(EffectKind.Happiness, EffectStrength.Medium),
+                            EffectComponent.negative(EffectKind.Friend, EffectStrength.Medium)
                         ])
                     )
             ],
@@ -1366,8 +1366,8 @@ export class InteractionRepository{
                     .withAlternative(
                         roles => "[Favorable]: Jajajaja, ¡putos fachas!",
                         roles => new Effect("Contrario", [
-                            EffectComponent.negative(EffectKind.Happiness, EffectStrength.High),
-                            EffectComponent.negative(EffectKind.Friend, EffectStrength.High)
+                            EffectComponent.negative(EffectKind.Happiness, EffectStrength.Medium),
+                            EffectComponent.negative(EffectKind.Friend, EffectStrength.Medium)
                         ])
                     )
             ],
@@ -1413,8 +1413,8 @@ export class InteractionRepository{
                     .withAlternative(
                         roles => "[Favorable]: Jajajaja, ¡putos rojos!",
                         roles => new Effect("Contrario", [
-                            EffectComponent.negative(EffectKind.Happiness, EffectStrength.High),
-                            EffectComponent.negative(EffectKind.Friend, EffectStrength.High)
+                            EffectComponent.negative(EffectKind.Happiness, EffectStrength.Medium),
+                            EffectComponent.negative(EffectKind.Friend, EffectStrength.Medium)
                         ])
                     )
             ],
@@ -1479,28 +1479,137 @@ export class InteractionRepository{
                 && !postconditions.exists(Sentence.build("Agresor", roles.get("Agresor").Individual.name))
                 && postconditions.exists(Sentence.build("TelePolitica"))
                 && !postconditions.exists(Sentence.build("TeleApagada")),
-            (roles, map) => new TruthTable()
-                .with(Sentence.build("Agresor", roles.get("Agresor").Individual.name))
-                .with(Sentence.build("TeleApagada"))
+            (roles, map) => {
+                roles.get("Agresor").humanize();
+                return new TruthTable()
+                    .with(Sentence.build("Agresor", roles.get("Agresor").Individual.name))
+                    .with(Sentence.build("TeleApagada"));
+            }
         ));
 
-        // -----------------------------------------------------------------------------------------------------------------------------------------
-        // -----------------------------------------------------------------------------------------------------------------------------------------
-        // -----------------------------------------------------------------------------------------------------------------------------------------
-
-        /*this._elements.push(new Interaction(
-            "Bailar",
-            "[Bailaor] baila.",
-            new RolesDescriptor("Bailaor"),
+        this._elements.push(new Interaction(
+            "RecuerdoAnselmo",
+            "Anselmo recuerda un suceso de la guerra civil",
+            new RolesDescriptor("Recordador"),
             [
-                new Phrase("Bailaor")
-                    .withAlternative(roles => "[Bailaor] se marca un baile sexy.", roles => Effect.empty([ EffectComponent.positive(EffectKind.Sex, EffectStrength.Medium) ]))
+                new Phrase("Recordador")
+                    .withAlternative(roles => "[Recordador] se mira las manos aturdido. Lo que acaba de pasar le hace recordar una historia de hace mucho tiempo. Una historia que casi había olvidado."),
+                new Phrase("Recordador")
+                    .withAlternative(roles => "Anselmo se encuentra en el frente, ataviado con un delantal mugriento dentro de una tienda del campamento militar."),
+                new Phrase("Recordador")
+                    .withAlternative(roles => "Delante suyo hay una enorme olla con caldo hirviendo. Alguien le grita desde fuera de la tienda."),
+                new Phrase("Recordador")
+                    .withAlternative(roles => "\"¡Anselmo carajo! ¡Cuanto queda para comer!\", es el sargento. Todo es tan vivo que parece real, como si hubiese rejuvenecido y estuviera otra vez allí."),
+                new Phrase("Recordador")
+                    .withAlternative(roles => "Oye un ruido detrás de la tienda. Son tiempos de guerra, así que coje su cuchillo y sale corriendo alrededor de la tienda."),
+                new Phrase("Recordador")
+                    .withAlternative(roles => "Un chico joven está husmeando por fuera de la tienda, por la indumentaria puede ser un desertor del bando golpista. Al ver a Anselmo sale corriendo."),
+                new Phrase("Recordador")
+                    .withAlternative(roles => "Anselmo le persigue y grita para dar la alarma. Le persigue durante un largo trecho, hasta que el joven tropieza y cae por un terraplén."),
+                new Phrase("Recordador")
+                    .withAlternative(roles => "Le tiene."),
+                new Phrase("Recordador")
+                    .withAlternative(roles => "Se avalanza sobre él empuñando su cuchillo. Pero cuando va a matarlo el joven le mira. Le mira a los ojos. Está asustado. Anselmo duda, porque es humano. Nunca ha matado."),
+                new Phrase("Recordador")
+                    .withAlternative(
+                        roles => "Anselmo apuñala al joven",
+                        roles => Effect.null(),
+                        roles => Sentence.build("Malo", roles.get("Recordador").Individual.name)
+                    )
+                    .withAlternative(
+                        roles => "Anselmo deja marchar al joven",
+                        roles => Effect.null(),
+                        roles => Sentence.build("Bueno", roles.get("Recordador").Individual.name)
+                    ),
             ],
-            Timing.Single,
-            (postconditions, roles, map) =>
-                map.getUbication(roles.get("Bailaor")).name === map.getLocation("Salon").name
-                && check(roles.get("Bailaor").Personality.politeUnpolite)
-        ));*/
+            Timing.GlobalSingle,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Recordador")).name === "Salon"
+                && roles.get("Recordador").Name === "Anselmo"
+                && roles.get("Recordador").IsActive
+                && postconditions.exists(Sentence.build("Agresor", roles.get("Recordador").Individual.name)),
+            (roles, map) => {
+                roles.get("Recordador").dehumanize();
+                return new TruthTable()
+                    .with(Sentence.build("Recuerdo", roles.get("Recordador").Individual.name));
+            }
+        ));
+
+        this._elements.push(new Interaction(
+            "RecuerdoFructuoso",
+            "Fructuoso recuerda un suceso de la guerra civil",
+            new RolesDescriptor("Recordador"),
+            [
+                new Phrase("Recordador")
+                    .withAlternative(roles => "[Recordador] se mira las manos aturdido. Lo que acaba de pasar le hace recordar una historia de hace mucho tiempo. Una historia que casi había olvidado."),
+                new Phrase("Recordador")
+                    .withAlternative(roles => "Fructuoso tiene el fusil en la mano. Está en la cima de una colina y delante suyo hay un muchacho lloroso y desnudo."),
+                new Phrase("Recordador")
+                    .withAlternative(roles => "Su cuerpo está lleno de heridas por las torturas que le han hecho los soldados."),
+                new Phrase("Recordador")
+                    .withAlternative(roles => "\"Mata al maricón este y vuelve al campamento cagando hostias\" dice el sargento detrás suyo. Oye como se marcha con los otros."),
+                new Phrase("Recordador")
+                    .withAlternative(roles => "Fructuoso tiene la misma sensación que cuando estuvo en ese instante y lugar. El mismo nudo en el estómago. El mismo vértigo de sentir estar a solo un paso de convertirse en un monstruo."),
+                new Phrase("Recordador")
+                    .withAlternative(roles => "El chico sigue balbuceando entre lloros \"No soy un invertido... lo juro, le digo la verdad\". Fructuoso mira el fusil y luego vuelve a mirar al chico."),
+                new Phrase("Recordador")
+                    .withAlternative(roles => "Entonces se enfoca en sus ojos vidriosos. El chico tiembla. Fructuoso también, nunca ha matado a nadie. Levanta el rifle y apunta a la cabeza del chico. Pone el dedo en el gatillo."),
+                new Phrase("Recordador")
+                    .withAlternative(
+                        roles => "Fructuoso dispara al chico en la cabeza",
+                        roles => Effect.null(),
+                        roles => Sentence.build("Malo", roles.get("Recordador").Individual.name)
+                    )
+                    .withAlternative(
+                        roles => "Fructuoso dispara al aire y le deja huir",
+                        roles => Effect.null(),
+                        roles => Sentence.build("Bueno", roles.get("Recordador").Individual.name)
+                    ),
+            ],
+            Timing.GlobalSingle,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Recordador")).name === "Salon"
+                && roles.get("Recordador").Name === "Fructuoso"
+                && roles.get("Recordador").IsActive
+                && postconditions.exists(Sentence.build("Agresor", roles.get("Recordador").Individual.name)),
+            (roles, map) => {
+                roles.get("Recordador").dehumanize();
+                return new TruthTable()
+                    .with(Sentence.build("Recuerdo", roles.get("Recordador").Individual.name));
+            }
+        ));
+
+        this._elements.push(new Interaction(
+            "Retiro",
+            "[Retirador] se retira a su cuarto",
+            new RolesDescriptor("Retirador", [ "Otro" ]),
+            [
+                new Phrase("Retirador")
+                    .withAlternative(roles => "[Retirador] sigue un poco aturdido después del vívido recuerdo."),
+                new Phrase("Retirador")
+                    .withAlternative(roles => "[Retirador]: yo... yo..."),
+                new Phrase("Otro", "Retirador")
+                    .withAlternative(roles => "[Otro]: ¿Se encuentra bien don [Retirador]?"),
+                new Phrase("Retirador")
+                    .withAlternative(roles => "[Retirador]: Sí... estoy bien. Gracias [Otro]. Creo que voy a descansar un poco al cuarto."),
+                new Phrase("Otro")
+                    .withAlternative(roles => "[Otro]: Como usted vea."),
+                new Phrase("Retirador")
+                    .withAlternative(roles => roles.get("Retirador").Characteristics.is("Impedido")
+                        ? "[Retirador] se marcha del salón por el ascensor, con semblante sombrío."
+                        : "[Retirador] se marcha del salón subiendo cabizbajo las escaleras.")
+            ],
+            Timing.GlobalSingle,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Retirador")).name === "Salon"
+                && roles.get("Retirador").IsActive
+                && postconditions.exists(Sentence.build("Recuerdo", roles.get("Retirador").Individual.name)),
+            (roles, map) => {
+                map.move(roles.get("Retirador"), map.getLocation("Limbo"));
+                return new TruthTable()
+                    .with(Sentence.build("Fin"));
+            }
+        ));
     }
 
     get all(){

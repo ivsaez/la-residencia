@@ -10,6 +10,7 @@ export class Functions{
         new Function("TeleDeportes", Cardinality.None),
         new Function("TelePolitica", Cardinality.None),
         new Function("TeleApagada", Cardinality.None),
+        new Function("Fin", Cardinality.None),
         new Function("Republicano", Cardinality.One),
         new Function("Nacional", Cardinality.One),
         new Function("Auxiliar", Cardinality.One),
@@ -25,6 +26,9 @@ export class Functions{
         new Function("Descansado", Cardinality.One),
         new Function("Cagado", Cardinality.One),
         new Function("Agresor", Cardinality.One),
+        new Function("Recuerdo", Cardinality.One),
+        new Function("Bueno", Cardinality.One),
+        new Function("Malo", Cardinality.One),
         new Function("Saludo", Cardinality.Two),
     ];
 
