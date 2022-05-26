@@ -8,6 +8,7 @@ import { Functions } from './logic/functions';
 import { Rules } from './logic/rules';
 import { Tables } from './logic/truthTables';
 import { parse } from "./reactionsParser";
+import { Sentence } from "first-order-logic";
 
 const CONTINUE = "Continuar";
 const START = "Comenzar";
@@ -87,7 +88,9 @@ function App() {
       new Agents(agents.all),
       interactions.all,
       new FinishingConditions()
-          .with(scenario => scenario.turn === 300));
+          .with((scenario: Scenario) => 
+            scenario.postconditions.exists(Sentence.build("Fin"))
+            || scenario.turn === 250));
     
     let newWorld = new World();
     newWorld.add(residenceScenario);

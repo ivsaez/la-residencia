@@ -321,6 +321,7 @@ export class InteractionRepository{
             (postconditions, roles, map) =>
                 map.getUbication(roles.get("Desplazado")).name === "Terraza"
                 && roles.get("Desplazado").IsActive
+                && roles.get("Desplazado").Characteristics.is("Auxiliar")
                 && !roles.get("Desplazado").Happiness.isUnhappy
                 && map.getUbication(roles.get("Desplazado")).isConnected(map.getLocation("Salon")),
             (roles, map) => 
@@ -1137,6 +1138,135 @@ export class InteractionRepository{
                 map.move(roles.get("Salidor"), map.getLocation("Salon"));
                 return TruthTable.empty;
             }
+        ));
+
+        this._elements.push(new Interaction(
+            "IrBalconLibremente",
+            "[Salidor] sale al balcón",
+            new RolesDescriptor("Salidor"),
+            [
+                new Phrase("Salidor")
+                    .withAlternative(roles => "[Salidor] se desplaza hacia el balcón moviendo su silla de ruedas.")
+            ],
+            Timing.Repeteable,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Salidor")).name === "Salon"
+                && roles.get("Salidor").Characteristics.is("Residente")
+                && !roles.get("Salidor").Characteristics.is("Demente")
+                && roles.get("Salidor").Characteristics.is("Impedido")
+                && roles.get("Salidor").IsActive
+                && roles.get("Salidor").Aspect.sex === SexKind.Female
+                && postconditions.exists(Sentence.build("Balcon"))
+                && !postconditions.exists(Sentence.build("Afresor", "Anselmo"))
+                && !postconditions.exists(Sentence.build("Afresor", "Fructuoso")),
+            (roles, map) => {
+                map.move(roles.get("Salidor"), map.getLocation("Terraza"));
+                return TruthTable.empty;
+            }
+        ));
+
+        this._elements.push(new Interaction(
+            "VolderBalconLibremente",
+            "[Salidor] vuelve del balcón",
+            new RolesDescriptor("Salidor"),
+            [
+                new Phrase("Salidor")
+                    .withAlternative(roles => "[Salidor] entra en el salón moviendo su silla de ruedas.")
+            ],
+            Timing.Repeteable,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Salidor")).name === "Terraza"
+                && roles.get("Salidor").Characteristics.is("Residente")
+                && !roles.get("Salidor").Characteristics.is("Demente")
+                && roles.get("Salidor").Characteristics.is("Impedido")
+                && roles.get("Salidor").IsActive
+                && postconditions.exists(Sentence.build("Balcon"))
+                && roles.get("Salidor").Aspect.sex === SexKind.Female,
+            (roles, map) => {
+                map.move(roles.get("Salidor"), map.getLocation("Salon"));
+                return TruthTable.empty;
+            }
+        ));
+
+        this._elements.push(new Interaction(
+            "CriticaBalconDesconocido",
+            "[Criticon] grita a un transeúnte",
+            new RolesDescriptor("Criticon"),
+            [
+                new Phrase("Criticon")
+                    .withAlternative(roles => "[Criticon] se asoma por la barandilla del balcón y ve a alguien pasar."),
+                new Phrase("Criticon")
+                    .withAlternative(roles => randomFromList([
+                        "[Criticon]: ¡Tápate el canalillo fresca! ¡Te veo el ombligo desde aquí!",
+                        "[Criticon]: ¡No mires al movil al andar atontao! ¡Que te vas a estampar con una farola!",
+                        "[Criticon]: ¡Recoge la mierda del perro guarro! ¡Es más limpio el perro que tú!",
+                        "[Criticon]: ¡Córtate esas greñas melenudo! ¡A saber las pulgas que llevas ahí dentro!",
+                        "[Criticon]: ¡Ponte una falda más larga golfa! ¡Puedo verte la marca de las bragas desde aquí!"
+                    ]))
+            ],
+            Timing.Repeteable,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Criticon")).name === "Terraza"
+                && roles.get("Criticon").Characteristics.is("Residente")
+                && !roles.get("Criticon").Characteristics.is("Demente")
+                && roles.get("Criticon").Characteristics.is("Impedido")
+                && roles.get("Criticon").IsActive
+                && roles.get("Criticon").Aspect.sex === SexKind.Female,
+            (roles, map) => TruthTable.empty
+        ));
+
+        this._elements.push(new Interaction(
+            "CriticaBalconAuxiliar",
+            "[Criticon] critica a [Otro] por fumar",
+            new RolesDescriptor("Criticon", ["Otro"]),
+            [
+                new Phrase("Criticon")
+                    .withAlternative(roles => "[Criticon]: Ya vas a darle al vicio otra vez..."),
+                new Phrase("Otro", "Criticon")
+                    .withAlternative(roles => "[Otro]: Algo tendré que hacer para aguantaros a todos lo que queda de día [Criticon]."),
+                new Phrase("Criticon", "Otro")
+                    .withAlternative(
+                        roles => "[Criticon]: Lo que vas a aguantar es una enfermedad terminal, ¡viciosa!.",
+                        roles => new Effect("Otro", [EffectComponent.negative(EffectKind.Happiness, EffectStrength.Medium)])
+                    )
+            ],
+            Timing.Single,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Criticon")).name === "Terraza"
+                && map.areInTheSameLocation(roles.get("Criticon"), roles.get("Otro"))
+                && roles.get("Criticon").Characteristics.is("Residente")
+                && !roles.get("Criticon").Characteristics.is("Demente")
+                && roles.get("Criticon").Characteristics.is("Impedido")
+                && roles.get("Otro").Characteristics.is("Auxiliar")
+                && postconditions.exists(Sentence.build("Balcon"))
+                && roles.get("Criticon").IsActive
+                && roles.get("Criticon").Aspect.sex === SexKind.Female,
+            (roles, map) => TruthTable.empty
+        ));
+
+        this._elements.push(new Interaction(
+            "PicarLavabo",
+            "[Picador] intenta ir al lavabo",
+            new RolesDescriptor("Picador", ["Otro"]),
+            [
+                new Phrase("Picador")
+                    .withAlternative(roles => "[Picador] se acerca con la silla a la puerta del lavabo, pero oye que hay gente dentro."),
+                new Phrase("Picador")
+                    .withAlternative(roles => "[Picador]: Mucho rato lleváis en el lavabo. ¡A saber qué estáis haciendo!"),
+                new Phrase("Otro")
+                    .withAlternative(roles => "[Otro]: Un poco de paciencia, enseguida salimos.")
+            ],
+            Timing.Single,
+            (postconditions, roles, map) => 
+                map.getUbication(roles.get("Picador")).name === "Salon"
+                && map.getUbication(roles.get("Otro")).name === "Lavabo"
+                && roles.get("Picador").Characteristics.is("Residente")
+                && !roles.get("Picador").Characteristics.is("Demente")
+                && roles.get("Picador").Characteristics.is("Impedido")
+                && roles.get("Otro").Characteristics.is("Auxiliar")
+                && roles.get("Picador").IsActive
+                && roles.get("Picador").Aspect.sex === SexKind.Female,
+            (roles, map) => TruthTable.empty
         ));
 
         this._elements.push(new Interaction(
