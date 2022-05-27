@@ -1,8 +1,8 @@
 import { MapStructure, World, Scenario, FinishingConditions, Agents, Input, ScenarioEndNoInteractions, ScenarioEndAllConditionsMet } from 'agents-flow';
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { AgentRepository } from './repositories/agentRepository';
-import { InteractionRepository } from './repositories/interactionRepository';
+import { AgentRepository, EndingAgentRepository } from './repositories/agentRepository';
+import { InteractionRepository, EndingInteractionRepository } from './repositories/interactionRepository';
 import { LocationRepository } from './repositories/locationRepository';
 import { Functions } from './logic/functions';
 import { Rules } from './logic/rules';
@@ -22,8 +22,10 @@ function App() {
   const [ choices, setChoices ] = useState([ START ] as string[])
 
   let agents: AgentRepository = new AgentRepository();
+  let endingAgents: EndingAgentRepository = new EndingAgentRepository();
   let locations: LocationRepository = new LocationRepository();
   let interactions: InteractionRepository = new InteractionRepository();
+  let endingInteractions: EndingInteractionRepository = new EndingInteractionRepository();
 
   let map: MapStructure = new MapStructure(locations.all);
 
@@ -68,6 +70,9 @@ function App() {
     }
 
     map.move(agents.get("Raquel"), map.getLocation("Salon"));
+
+    map.move(endingAgents.get("Recepcionista"), map.getLocation("Recepcion"));
+    map.move(endingAgents.get("Mariano"), map.getLocation("Recepcion"));
   }
 
   function initializeAgentDesires(): void{
@@ -91,9 +96,19 @@ function App() {
           .with((scenario: Scenario) => 
             scenario.postconditions.exists(Sentence.build("Fin"))
             || scenario.turn === 250));
+
+    var endingScenario = new Scenario(
+      "100 later",
+      map,
+      new Agents(endingAgents.all),
+      endingInteractions.all,
+      new FinishingConditions()
+          .with((scenario: Scenario) => scenario.turn === 10))
+      .inheritor();
     
     let newWorld = new World();
     newWorld.add(residenceScenario);
+    newWorld.add(endingScenario);
 
     setWorld(newWorld);
   }
@@ -112,30 +127,33 @@ function App() {
     }
 
     let scenario = world.currentScenario;
-    let step = scenario.performStep(input);
-    setWorld(world);
+    if(scenario !== null){
+      let step = scenario.performStep(input);
     
-    show(step.content);
-
-    let newChoices: string[] = [];
-    if(step.hasChoices){
-      for(let choice of step.choices.items){
-        newChoices.push(choice);
+      setWorld(world);
+    
+      show(step.content);
+  
+      let newChoices: string[] = [];
+      if(step.hasChoices){
+        for(let choice of step.choices.items){
+          newChoices.push(choice);
+        }
+  
+        setChoices(newChoices);
       }
-
-      setChoices(newChoices);
+      else{
+        newChoices.push(CONTINUE);
+        setChoices(newChoices);
+      }
+  
+      if(step.hasReactions){
+        let newReactions: string[] = parse(step.reactions);
+        show(newReactions);
+      }
+  
+      moveScrolledDivToBottom();
     }
-    else{
-      newChoices.push(CONTINUE);
-      setChoices(newChoices);
-    }
-
-    if(step.hasReactions){
-      let newReactions: string[] = parse(step.reactions);
-      show(newReactions);
-    }
-
-    moveScrolledDivToBottom();
   };
 
   function moveScrolledDivToBottom(): void{
