@@ -103,7 +103,7 @@ function App() {
       new Agents(endingAgents.all),
       endingInteractions.all,
       new FinishingConditions()
-          .with((scenario: Scenario) => scenario.turn === 10))
+          .with((scenario: Scenario) => scenario.turn === 20))
       .inheritor();
     
     let newWorld = new World();
@@ -168,7 +168,7 @@ function App() {
       output.push("--FIN--");
     }
     else if(texts.length === 1 && texts[0] === ScenarioEndAllConditionsMet){
-      output.push("--FIN--");
+      output.push("--¿FIN?--");
     }
     else{
       for(let text of texts){
