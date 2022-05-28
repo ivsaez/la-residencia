@@ -1,6 +1,7 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import { MapStructure, World, Scenario, FinishingConditions, Agents, Input, ScenarioEndNoInteractions, ScenarioEndAllConditionsMet } from 'agents-flow';
 import React, { useState, useEffect } from 'react';
-import './App.css';
 import { AgentRepository, EndingAgentRepository } from './repositories/agentRepository';
 import { InteractionRepository, EndingInteractionRepository } from './repositories/interactionRepository';
 import { LocationRepository } from './repositories/locationRepository';
@@ -9,6 +10,14 @@ import { Rules } from './logic/rules';
 import { Tables } from './logic/truthTables';
 import { parse } from "./reactionsParser";
 import { Sentence } from "first-order-logic";
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/esm/Container';
+import Row from 'react-bootstrap/esm/Row';
+import Col from 'react-bootstrap/esm/Col';
+import Message from './Message';
+import gepetto from './images/gepetto.png';
+import AgentMessage from './AgentMessage';
+import Navbar from 'react-bootstrap/esm/Navbar';
 
 const CONTINUE = "Continuar";
 const START = "Comenzar";
@@ -16,10 +25,10 @@ const START = "Comenzar";
 function App() {
 
   const [ count, setCount ] = useState(0);
-  const [ output, setOutput ] = useState([ "--LA RESIDENCIA (2012)--" ] as string[]);
+  const [ output, setOutput ] = useState([ new AgentMessage("--LA RESIDENCIA (2012)--") ] as AgentMessage[]);
 
   const [ world, setWorld ] = useState(null as World);
-  const [ choices, setChoices ] = useState([ START ] as string[])
+  const [ choices, setChoices ] = useState([ START ] as string[]);
 
   let agents: AgentRepository = new AgentRepository();
   let endingAgents: EndingAgentRepository = new EndingAgentRepository();
@@ -40,9 +49,9 @@ function App() {
     createWorld();
   }, []);
 
-  useEffect(() => {
-    document.title = `You clicked ${count} times`;
-  }, [ count ]);
+  useEffect(() => {  
+    moveToBottom();
+  });
 
   function loadLogicData(): void{
     for(let agent of agents.all){
@@ -151,47 +160,88 @@ function App() {
         let newReactions: string[] = parse(step.reactions);
         show(newReactions);
       }
-  
-      moveScrolledDivToBottom();
     }
   };
 
-  function moveScrolledDivToBottom(): void{
-    let scrolledDiv = document.getElementById("scrolledDiv");
-    if(scrolledDiv !== null){
-      scrolledDiv.scrollTop = (scrolledDiv.scrollHeight as number) - 50;
-    }
+  function moveToBottom(): void{
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: 'smooth',
+  });
   }
 
   function show(texts: string[]): void{
     if(texts.length === 1 && texts[0] === ScenarioEndNoInteractions){
-      output.push("--FIN--");
+      output.push(new AgentMessage("--FIN--"));
     }
     else if(texts.length === 1 && texts[0] === ScenarioEndAllConditionsMet){
-      output.push("--¿FIN?--");
+      output.push(new AgentMessage("--¿FIN?--"));
     }
     else{
+      let sideCalculated = false;
       for(let text of texts){
-        output.push(text);
+        let agentMessage = new AgentMessage(text);
+        if(!sideCalculated){
+          updateSide(agentMessage);
+          sideCalculated = true;
+        }
+
+        output.push(agentMessage);
       }
     }
     
     setOutput(output);
   }
 
+  function updateSide(agentMessage: AgentMessage): void{
+    if(!agentMessage.isTalking)
+      return;
+    
+    let lastMessage = output[output.length - 1];
+    if(!lastMessage.isTalking)
+      return;
+
+    if(lastMessage.agent === agentMessage.agent)
+      return;
+
+    agentMessage.sideToRight();
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <div className="flex-container">
-          <div id="scrolledDiv" className="flex-scrolled-child">
-            {output.map(text => <p>{ text }</p>)}
-          </div>
-          <div className="flex-child">
-            {choices.map((choice, index) => <p><button name={index + ""} onClick={onButtonClick}>{ choice }</button></p>)}
-          </div>
-        </div>
-      </header>
-    </div>
+    <>
+    <Navbar fixed="top" bg="primary" expand="lg">
+      <Container>
+        <Navbar.Brand><strong>LA RESIDENCIA</strong></Navbar.Brand>
+      </Container>
+    </Navbar>
+    <Container>
+      <div className="m-4">
+        <Row className="h-50 mb-3">
+          <Col lg="2"></Col>
+          <Col lg="8">
+            {output.map(message => {
+              if(message.isTalking){
+                return (<Message agentMessage={message} image={gepetto}></Message>);
+              }
+              else{
+                return (<div className="mb-2">{message.message}</div>);
+              }
+            })}
+          </Col>
+          <Col lg="2"></Col>
+        </Row>
+        <Row className="mb-3">
+          <Col lg="4"></Col>
+          <Col lg="4">
+            <div className="d-grid gap-2">
+              {choices.map((choice, index) => <Button name={index + ""} className="mb-2" variant="primary" onClick={onButtonClick}>{ choice }</Button>)}
+            </div>
+          </Col>
+          <Col lg="4"></Col>
+        </Row>
+      </div>
+    </Container>
+    </>
   );
 }
 
