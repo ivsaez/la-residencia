@@ -1,6 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { MapStructure, World, Scenario, FinishingConditions, Agents, Input, ScenarioEndNoInteractions, ScenarioEndAllConditionsMet } from 'agents-flow';
+import { MapStructure, World, Scenario, FinishingConditions, Agents, Input, ScenarioEndNoInteractions, ScenarioEndAllConditionsMet, Agent } from 'agents-flow';
 import React, { useState, useEffect } from 'react';
 import { AgentRepository, EndingAgentRepository } from './repositories/agentRepository';
 import { InteractionRepository, EndingInteractionRepository } from './repositories/interactionRepository';
@@ -15,9 +15,9 @@ import Container from 'react-bootstrap/esm/Container';
 import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
 import Message from './Message';
-import gepetto from './images/gepetto.png';
 import AgentMessage from './AgentMessage';
 import Navbar from 'react-bootstrap/esm/Navbar';
+import { buildPortraitFor } from "./portraitBuilder";
 
 const CONTINUE = "Continuar";
 const START = "Comenzar";
@@ -181,6 +181,7 @@ function App() {
       let sideCalculated = false;
       for(let text of texts){
         let agentMessage = new AgentMessage(text);
+
         if(!sideCalculated){
           updateSide(agentMessage);
           sideCalculated = true;
@@ -207,6 +208,14 @@ function App() {
     agentMessage.sideToRight();
   }
 
+  function findAgentByName(name: string): Agent{
+    let agent = agents.get(name);
+    if(agent === null)
+      agent = endingAgents.get(name);
+    
+    return agent;
+  }
+
   return (
     <>
     <Navbar fixed="top" bg="primary" expand="lg">
@@ -221,7 +230,7 @@ function App() {
           <Col lg="8">
             {output.map(message => {
               if(message.isTalking){
-                return (<Message agentMessage={message} image={gepetto}></Message>);
+                return (<Message agentMessage={message} image={buildPortraitFor(findAgentByName(message.agent))}></Message>);
               }
               else{
                 return (<div className="mb-2">{message.message}</div>);
