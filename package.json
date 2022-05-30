@@ -1,7 +1,10 @@
 {
   "name": "la-residencia",
+  "description": "Interactive fiction presented in Rayuela de Arena 2022 jam.",
   "version": "0.1.0",
+  "author": "Ivan Saez Zamora",
   "private": true,
+  "homepage": "https://la-residencia.github.io",
   "dependencies": {
     "@testing-library/react": "^13.0.1",
     "@testing-library/user-event": "^13.5.0",
@@ -20,7 +23,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -39,5 +44,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^4.0.0"
   }
 }
