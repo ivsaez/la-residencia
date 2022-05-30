@@ -205,6 +205,9 @@ function App() {
     if(lastMessage.agent === agentMessage.agent)
       return;
 
+    if(lastMessage.sided)
+      return;
+    
     agentMessage.sideToRight();
   }
 
