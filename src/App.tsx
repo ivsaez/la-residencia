@@ -14,6 +14,7 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/esm/Container';
 import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
+import Form from 'react-bootstrap/esm/Form';
 import Message from './Message';
 import AgentMessage from './AgentMessage';
 import Navbar from 'react-bootstrap/esm/Navbar';
@@ -30,6 +31,8 @@ function App() {
 
   const [ world, setWorld ] = useState(null as World);
   const [ choices, setChoices ] = useState([ START ] as string[]);
+
+  const [ vintageMode, setVintageMode ] = useState(false);
 
   let agents: AgentRepository = new AgentRepository();
   let endingAgents: EndingAgentRepository = new EndingAgentRepository();
@@ -220,6 +223,10 @@ function App() {
     return agent;
   }
 
+  const onSwitchChanged = (event: any) => {
+    setVintageMode(event.target.checked);
+  }
+
   return (
     <>
     <Navbar fixed="top" bg="primary" expand="lg">
@@ -227,6 +234,16 @@ function App() {
         <Navbar.Brand>
           <img src={logo} height="30" className="d-inline-block align-top" alt="La residencia logo" />
         </Navbar.Brand>
+        <Navbar.Text>
+        <Form>
+          <Form.Check 
+            type="switch"
+            id="custom-switch"
+            label="Vintage mode"
+            onChange={onSwitchChanged}
+          />
+        </Form>
+        </Navbar.Text>
       </Container>
     </Navbar>
     <Container>
@@ -236,7 +253,7 @@ function App() {
           <Col lg="8">
             {output.map(message => {
               if(message.isTalking){
-                return (<Message agentMessage={message} image={buildPortraitFor(findAgentByName(message.agent))}></Message>);
+                return (<Message agentMessage={message} image={buildPortraitFor(findAgentByName(message.agent), vintageMode)}></Message>);
               }
               else{
                 return (<div className="mb-2">{message.message}</div>);
