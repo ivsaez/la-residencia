@@ -18,6 +18,7 @@ import Message from './Message';
 import AgentMessage from './AgentMessage';
 import Navbar from 'react-bootstrap/esm/Navbar';
 import { buildPortraitFor } from "./portraitBuilder";
+import logo from "./images/logo.png";
 
 const CONTINUE = "Continuar";
 const START = "Comenzar";
@@ -223,7 +224,9 @@ function App() {
     <>
     <Navbar fixed="top" bg="primary" expand="lg">
       <Container>
-        <Navbar.Brand><strong>LA RESIDENCIA</strong></Navbar.Brand>
+        <Navbar.Brand>
+          <img src={logo} height="30" className="d-inline-block align-top" alt="La residencia logo" />
+        </Navbar.Brand>
       </Container>
     </Navbar>
     <Container>
