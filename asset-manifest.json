@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/la-residencia/static/css/main.bace6e01.css",
-    "main.js": "/la-residencia/static/js/main.df3b7896.js",
+    "main.js": "/la-residencia/static/js/main.0c23ac76.js",
     "static/media/maria_unhappy.png": "/la-residencia/static/media/maria_unhappy.489de78dd425b9095bf3.png",
     "static/media/maria_happy.png": "/la-residencia/static/media/maria_happy.b4fa8210a3cfb24a08af.png",
     "static/media/maria_normal.png": "/la-residencia/static/media/maria_normal.3c10f7cd9903644f280a.png",
@@ -28,10 +28,10 @@
     "static/media/jacinta_normal.png": "/la-residencia/static/media/jacinta_normal.a244c3ea10dddfe5b65c.png",
     "index.html": "/la-residencia/index.html",
     "main.bace6e01.css.map": "/la-residencia/static/css/main.bace6e01.css.map",
-    "main.df3b7896.js.map": "/la-residencia/static/js/main.df3b7896.js.map"
+    "main.0c23ac76.js.map": "/la-residencia/static/js/main.0c23ac76.js.map"
   },
   "entrypoints": [
     "static/css/main.bace6e01.css",
-    "static/js/main.df3b7896.js"
+    "static/js/main.0c23ac76.js"
   ]
 }
